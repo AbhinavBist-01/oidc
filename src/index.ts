@@ -130,3 +130,53 @@ app.post("/o/sign-up", async (req, res) => {
   });
   res.status(201).json({ ok: true });
 });
+
+app.get("/o/userinfo", async (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    res
+      .status(401)
+      .json({ message: "Invalid or missing authorization header" });
+    return;
+  }
+
+  const token = Array.isArray(authHeader)
+    ? authHeader[0].slice(7)
+    : authHeader.slice(7);
+
+  let claims: JWTClaims;
+  try {
+    claims = JWT.verify(token, PUBLIC_KEY, {
+      algorithms: ["RS256"],
+    }) as JWTClaims;
+  } catch (err) {
+    res.status(401).json({ message: "Invalid or expired token." });
+    return;
+  }
+
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, claims.sub))
+    .limit(1);
+
+  if (!user) {
+    res.status(404).json({ message: "User not found." });
+    return;
+  }
+
+  res.json({
+    sub: user.id,
+    email: user.email,
+    email_verified: String(user.emailVerified),
+    given_name: user.firstName ?? "",
+    family_name: user.lastName ?? undefined,
+    name: [user.firstName, user.lastName].filter(Boolean).join(" "),
+    picture: user.profileImageURL ?? undefined,
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`AuthServer is running on PORT ${PORT}`);
+});
