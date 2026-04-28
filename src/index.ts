@@ -18,12 +18,14 @@ app.use(express.static(path.resolve("public")));
 app.get("/", (req, res) => {
   res.json({ message: "Hello from Auth Server" });
 });
-app.get("health", (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
     message: "Server is healhty",
     healthy: true,
   });
 });
+
+// OIDC Endpoints
 app.get("/.well-known/openid-configuration", (req, res) => {
   const ISSUER = `http://localhost:${PORT}`;
   return res.json({
@@ -43,41 +45,88 @@ app.get("/o/authenticate", (req, res) => {
   res.sendFile(path.resolve("public", "authenticate.html"));
 });
 
-app.post("/0/authenticate/sign-in" , async (req,res)=>{
-    const {email,password}= req.body;
+app.post("/o/authenticate/sign-in", async (req, res) => {
+  const { email, password } = req.body;
 
-    if(!email || !password){
-        res.status(400).json({message:"Email and password are required."});
-        return;
-    }
+  if (!email || !password) {
+    res.status(400).json({ message: "Email and password are required." });
+    return;
+  }
 
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.email,email)).limit(1);
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email))
+    .limit(1);
 
-    if(!user || !user.password || !user.salt){
-        res.json({message:"Invalid email or password."});
-        return;
-    }
+  if (!user || !user.password || !user.salt) {
+    res.json({ message: "Invalid email or password." });
+    return;
+  }
 
-    const hash = crypto.createHash("sha256").update(password + user.salt).digest("hex");
+  const hash = crypto
+    .createHash("sha256")
+    .update(password + user.salt)
+    .digest("hex");
 
-    if(hash !== user.password){
-        res.status(401).json({message:"Invalid email or password."});
-    return 
-    }
+  if (hash !== user.password) {
+    res.status(401).json({ message: "Invalid email or password." });
+    return;
+  }
 
-    const ISSUER = `http://localhost:${PORT}`;
-    const now = Math.floor(Date.now() / 1000);
+  const ISSUER = `http://localhost:${PORT}`;
+  const now = Math.floor(Date.now() / 1000);
 
-    const claims: JWTClaims = {
-      iss: ISSUER,
-      sub: user.id,
-      email: user.email,
-      email_verified: Boolean(user.emailVerified),
-      exp: now + 3600,
-      given_name: user.firstName ?? "",
-      family_name: user.lastName ?? undefined,
-      name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-      picture: user.profileImageURL ?? undefined,
-    };
+  const claims: JWTClaims = {
+    iss: ISSUER,
+    sub: user.id,
+    email: user.email,
+    email_verified: String(user.emailVerified),
+    exp: now + 3600,
+    given_name: user.firstName ?? "",
+    family_name: user.lastName ?? undefined,
+    name: [user.firstName, user.lastName].filter(Boolean).join(" "),
+    picture: user.profileImageURL ?? undefined,
+  };
 
-})
+  const token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+
+  res.json({ token });
+});
+
+app.post("/o/sign-up", async (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  if (!email || !password || !firstName) {
+    res
+      .status(400)
+      .json({ message: "Email, password and first name are required." });
+    return;
+  }
+
+  const [existingUser] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email))
+    .limit(1);
+
+  if (existingUser) {
+    res.status(409).json({ message: "Email is already in use." });
+    return;
+  }
+
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto
+    .createHash("sha256")
+    .update(password + salt)
+    .digest("hex");
+
+  await db.insert(usersTable).values({
+    firstName,
+    lastName: lastName ?? null,
+    email,
+    password: hash,
+    salt,
+  });
+  res.status(201).json({ ok: true });
+});
