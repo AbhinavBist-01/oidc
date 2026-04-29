@@ -1,3 +1,4 @@
+import { is } from "drizzle-orm";
 import {
   uuid,
   pgTable,
@@ -10,7 +11,7 @@ import {
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-
+  isAdmin: boolean("is_admin").default(false).notNull(),
   firstName: varchar("first_name", { length: 25 }),
   lastName: varchar("last_name", { length: 25 }),
 
@@ -36,24 +37,19 @@ export const clients = pgTable("clients", {
     .notNull()
     .references(() => usersTable.id),
   scope: text("scope").notNull(),
+
+  verified: boolean("verified").default(false).notNull(),
+  registration_id: uuid("registration_id").references(
+    () => clientRegistrations.id,
+  ),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
 
-export const shortCodes = pgTable("short_codes", {
-  code: varchar("code", { length: 10 }).primaryKey(),
-  clientId: uuid("client_id")
-    .notNull()
-    .references(() => clients.clientId),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => usersTable.id),
-  scope: text("scope").notNull(),
-  nonce: text("nonce"),
-  codeChallenge: text("code_challenge").notNull(),
-  codeChallengeMethod: varchar("code_challenge_method", {
-    length: 10,
-  }).notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+export const sessions = pgTable("sessions", {});
+
+export const authorizationCodes = pgTable("authorization_codes", {});
+
+export const clientRegistrations = pgTable("client_registrations", {
+  id: uuid("id").primaryKey().defaultRandom(),
 });
