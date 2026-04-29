@@ -4,8 +4,9 @@ export interface JWTClaims {
   email: string;
   email_verified: string;
   exp: number;
-  family_name?: string;
+  iat: number;
+  family_name: string | undefined;
   given_name: string;
   name: string;
-  picture?: string;
+  picture: string | null;
 }

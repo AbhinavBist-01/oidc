@@ -79,14 +79,15 @@ app.post("/o/authenticate/sign-in", async (req, res) => {
 
   const claims: JWTClaims = {
     iss: ISSUER,
-    sub: user.id,
+    sub: user.id.toString(),
     email: user.email,
     email_verified: String(user.emailVerified),
     exp: now + 3600,
-    given_name: user.firstName ?? "",
-    family_name: user.lastName ?? undefined,
+    iat: now,
+    given_name: user.firstName || "",
+    family_name: user.lastName || "",
     name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-    picture: user.profileImageURL ?? undefined,
+    picture: user.profileImageURL || null,
   };
 
   const token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
@@ -158,7 +159,7 @@ app.get("/o/userinfo", async (req, res) => {
   const [user] = await db
     .select()
     .from(usersTable)
-    .where(eq(usersTable.id, claims.sub))
+    .where(eq(usersTable.id, claims.sub) as any)
     .limit(1);
 
   if (!user) {
@@ -170,10 +171,10 @@ app.get("/o/userinfo", async (req, res) => {
     sub: user.id,
     email: user.email,
     email_verified: String(user.emailVerified),
-    given_name: user.firstName ?? "",
-    family_name: user.lastName ?? undefined,
+    given_name: user.firstName || "",
+    family_name: user.lastName || "",
     name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-    picture: user.profileImageURL ?? undefined,
+    picture: user.profileImageURL ?? null,
   });
 });
 
