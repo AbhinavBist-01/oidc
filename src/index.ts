@@ -15,6 +15,10 @@ import { isAdmin } from "./middleware/admin";
 import { getPendingRegistrations } from "./utils/client";
 import { createSession } from "./utils/session";
 import { setSessionCookie } from "./utils/cookie";
+import { getSessionCookie } from "./utils/cookie";
+import { getSessionById, isSessionValid } from "./utils/session";
+import { getApprovedClient } from "./utils/client";
+import { storeAuthorizationCode } from "./utils/auth-code";
 
 const app = express();
 const PORT = process.env.PORT ?? 8000;
@@ -49,7 +53,7 @@ app.get("/.well-known/jwks.json", async (req, res) => {
   res.json({ keys: [key.toJSON()] });
 });
 
-app.get("/o/authenticate", (req, res) => {
+app.get("/o/authorize", (req, res) => {
   res.sendFile(path.resolve("public", "authenticate.html"));
 });
 
@@ -196,6 +200,74 @@ app.get("/admin/registrations", requireSession, isAdmin, async (req, res) => {
     console.error("Error fetching registrations:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+app.get("/o/authorize", async (req, res) => {
+  const {
+    response_type,
+    client_id,
+    redirect_uri,
+    scope = "",
+    state,
+    nonce,
+  } = req.query;
+
+  if (
+    response_type !== "code" ||
+    typeof client_id !== "string" ||
+    typeof redirect_uri !== "string" ||
+    typeof scope !== "string"
+  ) {
+    res.status(400).json({ message: "Invalid authorization request" });
+    return;
+  }
+
+  if (!scope.split(" ").includes("openid")) {
+    res.status(400).json({ message: "Scope must include 'openid'" });
+    return;
+  }
+
+  const client = await getApprovedClient(client_id);
+
+  if (!client) {
+    res.status(400).json({ message: "Invalid client_id" });
+    return;
+  }
+  const allowedRedirectUris = client.redirectUri as string[];
+
+  if (!allowedRedirectUris.includes(redirect_uri)) {
+    res.status(400).json({ message: "Invalid redirect_uri" });
+    return;
+  }
+
+  const sessionId = getSessionCookie(req);
+  const session = sessionId ? await getSessionById(sessionId) : null;
+
+  if (!session || !isSessionValid(session.expiresAt)) {
+    const loginParams = new URLSearchParams({
+      redirect_uri: req.originalUrl,
+    });
+
+    res.redirect(`/o/authenticate?${loginParams.toString()}`);
+    return;
+  }
+
+  const code = await storeAuthorizationCode(
+    client.clientId,
+    session.userId,
+    redirect_uri,
+    scope,
+    typeof nonce === "string" ? nonce : undefined,
+  );
+
+  const redirectUrl = new URL(redirect_uri);
+  redirectUrl.searchParams.set("code", code);
+
+  if (typeof state === "string") {
+    redirectUrl.searchParams.set("state", state);
+  }
+
+  res.redirect(redirectUrl.toString());
 });
 
 app.listen(PORT, () => {
