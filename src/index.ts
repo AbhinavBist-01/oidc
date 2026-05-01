@@ -42,7 +42,8 @@ app.get("/.well-known/openid-configuration", (req, res) => {
   const ISSUER = `http://localhost:${PORT}`;
   return res.json({
     issuer: ISSUER,
-    authorization_endpoint: `${ISSUER}/o/authenticate`,
+    authorization_endpoint: `${ISSUER}/o/authorize`,
+    token_endpoint: `${ISSUER}/o/token`,
     userinfo_endpoint: `${ISSUER}/o/userinfo`,
     jwks_uri: `${ISSUER}/.well-known/jwks.json`,
   });
