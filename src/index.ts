@@ -13,6 +13,8 @@ import cookieParser from "cookie-parser";
 import { requireSession } from "./middleware/auth";
 import { isAdmin } from "./middleware/admin";
 import { getPendingRegistrations } from "./utils/client";
+import { createSession } from "./utils/session";
+import { setSessionCookie } from "./utils/cookie";
 
 const app = express();
 const PORT = process.env.PORT ?? 8000;
@@ -87,7 +89,7 @@ app.post("/o/authenticate/sign-in", async (req, res) => {
     iss: ISSUER,
     sub: user.id.toString(),
     email: user.email,
-    email_verified: String(user.emailVerified),
+    email_verified: user.emailVerified,
     exp: now + 3600,
     iat: now,
     given_name: user.firstName || "",
@@ -97,11 +99,13 @@ app.post("/o/authenticate/sign-in", async (req, res) => {
   };
 
   const token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+  const session = await createSession(user.id.toString());
+  setSessionCookie(res, session.id);
 
   res.json({ token });
 });
 
-app.post("/o/sign-up", async (req, res) => {
+app.post("/o/authenticate/sign-up", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
   if (!email || !password || !firstName) {
@@ -138,7 +142,7 @@ app.post("/o/sign-up", async (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-app.get("/o/userinfo", requireSession, async (req, res) => {
+app.get("/o/userinfo", async (req, res) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
@@ -176,7 +180,7 @@ app.get("/o/userinfo", requireSession, async (req, res) => {
   res.json({
     sub: user.id,
     email: user.email,
-    email_verified: String(user.emailVerified),
+    email_verified: user.emailVerified,
     given_name: user.firstName || "",
     family_name: user.lastName || "",
     name: [user.firstName, user.lastName].filter(Boolean).join(" "),
