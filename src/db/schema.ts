@@ -1,4 +1,3 @@
-import { is } from "drizzle-orm";
 import {
   uuid,
   pgTable,
@@ -8,6 +7,7 @@ import {
   timestamp,
   json,
 } from "drizzle-orm/pg-core";
+import { create } from "node:domain";
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -46,10 +46,41 @@ export const clients = pgTable("clients", {
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
 
-export const sessions = pgTable("sessions", {});
+export const sessions = pgTable("sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  refreshToken: varchar("refresh_token", { length: 256 }).notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
-export const authorizationCodes = pgTable("authorization_codes", {});
+export const authorizationCodes = pgTable("authorization_codes", {
+  code: varchar("code", { length: 128 }).primaryKey(),
+  clientId: uuid("client_id")
+    .notNull()
+    .references(() => clients.clientId),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  redirectUri: text("redirect_uri").notNull(),
+  scope: text("scope").notNull(),
+  nonce: text("nonce"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+});
 
 export const clientRegistrations = pgTable("client_registrations", {
   id: uuid("id").primaryKey().defaultRandom(),
+  clientName: varchar("client_name", { length: 255 }).notNull(),
+  description: text("description"),
+  redirectUris: json("redirect_uris").notNull(), // Array of URLs
+  status: varchar("status", { length: 50 }).default("pending").notNull(), // 'pending', 'approved', 'rejected'
+  createdBy: uuid("created_by").references(() => usersTable.id),
+  reviewedBy: uuid("reviewed_by").references(() => usersTable.id),
+  reviewedAt: timestamp("reviewed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });

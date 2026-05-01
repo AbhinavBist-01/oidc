@@ -15,6 +15,20 @@
       "when": 1777486357244,
       "tag": "0001_concerned_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777621496112,
+      "tag": "0002_sleepy_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777621760196,
+      "tag": "0003_living_screwball",
+      "breakpoints": true
     }
   ]
 }
