@@ -122,6 +122,17 @@ export async function approveRegistration(
   if (!registration.createdBy) {
     throw new Error("Invalid registration data: missing createdBy");
   }
+
+  await db
+    .update(clientRegistrations)
+    .set({
+      status: "approved",
+      reviewedBy: reviewerId,
+      reviewedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(clientRegistrations.id, registrationId));
+
   await db.insert(clients).values({
     clientId,
     clientName: registration.clientName,

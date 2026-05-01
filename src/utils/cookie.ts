@@ -13,7 +13,7 @@ export function setSessionCookie(res: Response, sessionId: string) {
   });
 }
 
-export function getSessionCookie(req: Request): string | undefined {
+export function getSessionCookie(req: Request): string | null {
   return req.cookies[COOKIE_NAME] ?? null;
 }
 

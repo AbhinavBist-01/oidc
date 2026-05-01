@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import express from "express";
 import path from "node:path";
+
 import { eq } from "drizzle-orm";
 import JWT from "jsonwebtoken";
 import jose from "node-jose";
@@ -8,12 +9,17 @@ import { db } from "./db";
 import { usersTable } from "./db/schema";
 import { PRIVATE_KEY, PUBLIC_KEY } from "./utils/cert";
 import type { JWTClaims } from "./utils/user-token";
+import cookieParser from "cookie-parser";
+import { requireSession } from "./middleware/auth";
+import { isAdmin } from "./middleware/admin";
+import { getPendingRegistrations } from "./utils/client";
 
 const app = express();
 const PORT = process.env.PORT ?? 8000;
 
 app.use(express.json());
 app.use(express.static(path.resolve("public")));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from Auth Server" });
@@ -132,7 +138,7 @@ app.post("/o/sign-up", async (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-app.get("/o/userinfo", async (req, res) => {
+app.get("/o/userinfo", requireSession, async (req, res) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
@@ -176,6 +182,16 @@ app.get("/o/userinfo", async (req, res) => {
     name: [user.firstName, user.lastName].filter(Boolean).join(" "),
     picture: user.profileImageURL ?? null,
   });
+});
+
+app.get("/admin/registrations", requireSession, isAdmin, async (req, res) => {
+  try {
+    const registrations = await getPendingRegistrations();
+    res.json({ registrations });
+  } catch (error) {
+    console.error("Error fetching registrations:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 app.listen(PORT, () => {
