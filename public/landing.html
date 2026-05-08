@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OIDC Provider | Dev Console</title>
+    <style>
+      :root {
+        --bg: #050816;
+        --bg-soft: #0b1226;
+        --panel: #0f172a;
+        --panel-2: #131f3a;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --border: #22304f;
+        --accent: #22d3ee;
+        --accent-2: #34d399;
+        --danger: #fb7185;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+        color: var(--text);
+        background:
+          radial-gradient(1200px 600px at 10% -10%, #0e1b3e 0%, transparent 55%),
+          radial-gradient(900px 500px at 90% -20%, #103339 0%, transparent 55%),
+          var(--bg);
+      }
+
+      .wrap {
+        width: min(1100px, 100%);
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.9rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(4px);
+      }
+
+      .brand {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .links a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 0.85rem;
+        font-size: 0.9rem;
+      }
+
+      .links a:hover {
+        color: var(--text);
+      }
+
+      .hero {
+        margin-top: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: linear-gradient(145deg, rgba(19, 31, 58, 0.95), rgba(15, 23, 42, 0.95));
+        padding: 1.2rem;
+      }
+
+      .tag {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.2rem 0.55rem;
+        color: var(--accent);
+        font-size: 0.78rem;
+      }
+
+      h1 {
+        margin: 0.6rem 0 0.45rem;
+        font-size: clamp(1.25rem, 2.8vw, 2rem);
+        line-height: 1.3;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .cta {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.2rem;
+        padding: 0 0.8rem;
+        border-radius: 9px;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 0.88rem;
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, #0e7490, #0f766e);
+        border-color: transparent;
+      }
+
+      .grid {
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 0.8rem;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(15, 23, 42, 0.85);
+        padding: 0.9rem;
+      }
+
+      .span-6 { grid-column: span 6; }
+      .span-12 { grid-column: span 12; }
+
+      h2 {
+        margin: 0 0 0.65rem;
+        font-size: 0.98rem;
+        color: #dbeafe;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+
+      .kv {
+        margin: 0.4rem 0;
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      .kv b {
+        color: var(--text);
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 0.82rem;
+        color: #d1fae5;
+        background: #0a1124;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.7rem;
+        line-height: 1.6;
+      }
+
+      .flow {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .step {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #0a1328;
+        padding: 0.6rem;
+        font-size: 0.84rem;
+      }
+
+      .step b {
+        color: var(--accent-2);
+      }
+
+      .ok { color: var(--accent-2); }
+      .warn { color: #fbbf24; }
+      .bad { color: var(--danger); }
+
+      @media (max-width: 900px) {
+        .span-6 { grid-column: span 12; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">OIDC Provider Dev Console</div>
+        <nav class="links">
+          <a href="/o/authenticate">Auth</a>
+          <a href="/clients/register">Dev Client</a>
+          <a href="/admin/dashboard">Admin</a>
+          <a href="/.well-known/openid-configuration">Discovery</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <span class="tag">custom oidc / oauth2 authorization code flow</span>
+        <h1>Dark-themed identity provider with auth, consent, and client lifecycle.</h1>
+        <p class="lead">
+          This server handles user authentication, authorization decisions, code exchange, token minting,
+          and user profile claims for connected apps.
+        </p>
+        <div class="cta">
+          <a class="btn primary" href="/o/authenticate">Start Sign In</a>
+          <a class="btn" href="/clients/register">Register Client</a>
+          <a class="btn" href="/admin/dashboard">Open Admin Queue</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card span-6">
+          <h2>Architecture</h2>
+          <div class="kv"><b>Identity:</b> users, sessions, login, signup</div>
+          <div class="kv"><b>Authorization:</b> `/o/authorize` + consent + one-time code</div>
+          <div class="kv"><b>Token Service:</b> `/o/token` with client validation + JWT issuance</div>
+          <div class="kv"><b>Claims API:</b> `/o/userinfo` from bearer access token</div>
+          <div class="kv"><b>Provider Metadata:</b> discovery + JWKS</div>
+          <div class="kv"><b>Client Management:</b> registration, admin approve/reject</div>
+        </article>
+
+        <article class="card span-6">
+          <h2>Implementation Status</h2>
+          <div class="kv ok"><b>Done:</b> Auth Code flow, token exchange, one-time code consumption</div>
+          <div class="kv ok"><b>Done:</b> Consent screen, developer registration UI, admin approval UI</div>
+          <div class="kv ok"><b>Done:</b> Logout endpoint + session-based route guards</div>
+          <div class="kv warn"><b>Next:</b> PKCE, stronger password hashing, client secret hashing</div>
+          <div class="kv warn"><b>Next:</b> richer OAuth error responses + stricter validations</div>
+          <div class="kv bad"><b>Prod gap:</b> no rate limiting / no audit logs yet</div>
+        </article>
+
+        <article class="card span-12">
+          <h2>Auth Flow</h2>
+          <div class="flow">
+            <div class="step"><b>1.</b> Client redirects browser to <code>/o/authorize</code> with <code>client_id</code>, <code>redirect_uri</code>, <code>scope</code>, <code>state</code>, <code>nonce</code>.</div>
+            <div class="step"><b>2.</b> Provider validates client + redirect + scope, checks session, then moves to consent.</div>
+            <div class="step"><b>3.</b> User clicks allow or deny on consent page.</div>
+            <div class="step"><b>4.</b> On allow, provider stores one-time code and redirects to client callback with <code>code</code> and <code>state</code>.</div>
+            <div class="step"><b>5.</b> Client backend calls <code>/o/token</code> with code + client credentials.</div>
+            <div class="step"><b>6.</b> Provider validates grant and returns <code>access_token</code> + <code>id_token</code>.</div>
+            <div class="step"><b>7.</b> Client can call <code>/o/userinfo</code> using bearer access token.</div>
+          </div>
+        </article>
+
+        <article class="card span-6">
+          <h2>Core Endpoints</h2>
+          <pre>GET  /.well-known/openid-configuration
+GET  /.well-known/jwks.json
+GET  /o/authenticate
+POST /o/authenticate/sign-in
+POST /o/authenticate/sign-up
+GET  /o/authorize
+GET  /o/authorize/consent
+POST /o/authorize/decision
+POST /o/token
+GET  /o/userinfo
+POST /o/logout</pre>
+        </article>
+
+        <article class="card span-6">
+          <h2>Dev + Admin UI</h2>
+          <pre>GET  /clients/register
+POST /clients/register
+GET  /admin/dashboard
+GET  /admin/registrations
+POST /admin/registrations/:id/approve
+POST /admin/registrations/:id/reject</pre>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>

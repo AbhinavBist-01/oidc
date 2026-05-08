@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register OAuth Client</title>
+    <style>
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(130deg, #f8fafc 0%, #ecfeff 45%, #eef2ff 100%);
+        color: var(--text);
+        min-height: 100dvh;
+        padding: 1rem;
+      }
+      .wrap { width: min(760px, 100%); margin: 0 auto; }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      h1 { margin: 0; font-size: 1.4rem; }
+      .sub { color: var(--muted); margin: 0.25rem 0 0; }
+      label { font-weight: 600; font-size: 0.9rem; margin-top: 0.8rem; display: block; }
+      input, textarea {
+        width: 100%;
+        margin-top: 0.4rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.55rem 0.65rem;
+        font: inherit;
+      }
+      textarea { min-height: 120px; resize: vertical; }
+      .actions { display: flex; gap: 0.65rem; margin-top: 1rem; }
+      button {
+        border: 0;
+        border-radius: 10px;
+        height: 2.3rem;
+        padding: 0 0.9rem;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .primary { background: #0f172a; color: #fff; }
+      .ghost { background: #e2e8f0; color: #0f172a; }
+      .msg { margin-top: 0.8rem; color: var(--muted); font-size: 0.9rem; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <h1>Client Registration</h1>
+          <p class="sub">Submit your app and wait for admin approval.</p>
+        </div>
+        <button class="ghost" id="logoutBtn">Logout</button>
+      </div>
+
+      <section class="card">
+        <form id="registerForm">
+          <label for="clientName">Client Name</label>
+          <input id="clientName" required placeholder="My Local App" />
+
+          <label for="redirectUris">Redirect URIs (one per line)</label>
+          <textarea id="redirectUris" required placeholder="http://localhost:3000/callback"></textarea>
+
+          <label for="description">Description</label>
+          <textarea id="description" placeholder="Short note about this client"></textarea>
+
+          <div class="actions">
+            <button class="primary" type="submit">Submit Registration</button>
+          </div>
+        </form>
+
+        <div class="msg" id="msg"></div>
+        <div class="msg mono" id="result"></div>
+      </section>
+    </div>
+
+    <script>
+      const form = document.getElementById("registerForm");
+      const msg = document.getElementById("msg");
+      const result = document.getElementById("result");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.textContent = "Submitting...";
+        result.textContent = "";
+
+        const clientName = document.getElementById("clientName").value.trim();
+        const redirectUris = document
+          .getElementById("redirectUris")
+          .value.split("\n")
+          .map((v) => v.trim())
+          .filter(Boolean);
+        const description = document.getElementById("description").value.trim();
+
+        try {
+          const res = await fetch("/clients/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ clientName, redirectUris, description }),
+          });
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            msg.textContent = data.message || "Registration failed.";
+            return;
+          }
+          msg.textContent = "Registration submitted.";
+          result.textContent = `registrationId: ${data.registrationId} | status: ${data.status}`;
+        } catch {
+          msg.textContent = "Something went wrong.";
+        }
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await fetch("/o/logout", { method: "POST" });
+        window.location.href = "/o/authenticate";
+      });
+    </script>
+  </body>
+</html>

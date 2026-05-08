@@ -78,3 +78,8 @@ export async function getAndValidateAuthorizationCode(
     createdAt: authCode.createdAt,
   };
 }
+
+// Delete the authorization code after use
+export async function deleteAuthorizationCode(code: string): Promise<void> {
+  await db.delete(authorizationCodes).where(eq(authorizationCodes.code, code));
+}
