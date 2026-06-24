@@ -89,36 +89,36 @@ export const SignUp: React.FC = () => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1 }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
         
         <div style={{ textAlign: "center" }}>
-          <div style={{ width: "50px", height: "50px", borderRadius: "var(--radius-md)", background: "rgba(6, 182, 212, 0.1)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "12px", color: "var(--accent)" }}>
-            <UserPlus size={24} />
+          <div style={{ width: "42px", height: "42px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-darkest)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "8px", color: "#ffffff" }}>
+            <UserPlus size={20} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Create Account</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px" }}>Enter your details to get started</p>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.1rem" }}>Create Account</h2>
+          <p style={{ fontSize: "0.8rem", marginTop: "2px", color: "var(--muted)" }}>Enter your details to get started</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           {error && (
-            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)" }}>
-              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: "0 0 16px 0" }}>
+              <AlertCircle size={15} style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)" }}>
-              <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
+            <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: "0 0 16px 0" }}>
+              <CheckCircle2 size={15} style={{ flexShrink: 0 }} />
               <span>{success}</span>
             </div>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             <div className="form-group">
               <label htmlFor="firstName">First name</label>
               <div style={{ position: "relative" }}>
-                <User size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+                <User size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
                 <input
                   id="firstName"
                   type="text"
@@ -126,7 +126,7 @@ export const SignUp: React.FC = () => {
                   placeholder="John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  style={{ paddingLeft: "42px" }}
+                  style={{ paddingLeft: "36px" }}
                   required
                 />
               </div>
@@ -135,7 +135,7 @@ export const SignUp: React.FC = () => {
             <div className="form-group">
               <label htmlFor="lastName">Last name</label>
               <div style={{ position: "relative" }}>
-                <User size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+                <User size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
                 <input
                   id="lastName"
                   type="text"
@@ -143,7 +143,7 @@ export const SignUp: React.FC = () => {
                   placeholder="Doe"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  style={{ paddingLeft: "42px" }}
+                  style={{ paddingLeft: "36px" }}
                   required
                 />
               </div>
@@ -153,7 +153,7 @@ export const SignUp: React.FC = () => {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <div style={{ position: "relative" }}>
-              <Mail size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <Mail size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="email"
                 type="email"
@@ -161,16 +161,16 @@ export const SignUp: React.FC = () => {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: "42px" }}
+                style={{ paddingLeft: "36px" }}
                 required
               />
             </div>
           </div>
 
-          <div className="form-group" style={{ marginBottom: "16px" }}>
+          <div className="form-group" style={{ marginBottom: "12px" }}>
             <label htmlFor="password">Password</label>
             <div style={{ position: "relative" }}>
-              <Lock size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <Lock size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="password"
                 type="password"
@@ -178,7 +178,7 @@ export const SignUp: React.FC = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingLeft: "42px" }}
+                style={{ paddingLeft: "36px" }}
                 required
               />
             </div>
@@ -187,10 +187,10 @@ export const SignUp: React.FC = () => {
             </span>
           </div>
 
-          <div className="form-group" style={{ marginBottom: "20px" }}>
+          <div className="form-group" style={{ marginBottom: "16px" }}>
             <label htmlFor="confirmPassword">Confirm password</label>
             <div style={{ position: "relative" }}>
-              <Lock size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <Lock size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="confirmPassword"
                 type="password"
@@ -198,7 +198,7 @@ export const SignUp: React.FC = () => {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ paddingLeft: "42px", borderColor: passwordMismatch ? "var(--danger)" : "" }}
+                style={{ paddingLeft: "36px", borderColor: passwordMismatch ? "var(--danger)" : "" }}
                 required
               />
             </div>
@@ -212,7 +212,7 @@ export const SignUp: React.FC = () => {
           <button type="submit" className="btn btn-primary" style={{ width: "100%" }} disabled={loading}>
             {loading ? (
               <>
-                <Loader2 size={16} className="spin-anim" />
+                <Loader2 size={14} className="spin-anim" />
                 Creating account...
               </>
             ) : (
@@ -221,15 +221,15 @@ export const SignUp: React.FC = () => {
           </button>
         </form>
 
-        <p style={{ fontSize: "0.75rem", color: "var(--muted)", textAlign: "center", lineHeight: "1.4" }}>
+        <p style={{ fontSize: "0.72rem", color: "var(--muted)", textAlign: "center", lineHeight: "1.4" }}>
           By creating an account you agree to our{" "}
-          <a href="#" onClick={(e) => e.preventDefault()} style={{ textDecoration: "underline" }}>Terms of Service</a> and{" "}
-          <a href="#" onClick={(e) => e.preventDefault()} style={{ textDecoration: "underline" }}>Privacy Policy</a>.
+          <a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a> and{" "}
+          <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>.
         </p>
 
-        <div style={{ textAlign: "center", fontSize: "0.8rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "10px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.78rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "10px" }}>
           Already have an account?{" "}
-          <Link to={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)" }}>
+          <Link to={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)", textDecoration: "none" }}>
             Sign in
           </Link>
         </div>

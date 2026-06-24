@@ -55,7 +55,6 @@ export const ClientRegister: React.FC = () => {
           id: data.registrationId,
           status: data.status,
         });
-        // Clear form fields on success
         setClientName("");
         setRedirectUris("");
         setDescription("");
@@ -69,41 +68,41 @@ export const ClientRegister: React.FC = () => {
   };
 
   return (
-    <div className="container" style={{ maxWidth: "800px" }}>
-      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div className="container" style={{ maxWidth: "720px" }}>
+      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
         
         <div>
-          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Register OIDC Client</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px" }}>
-            Submit your client application details. Once submitted, your registration will await approval by an administrator.
+          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Client Registration</h2>
+          <p style={{ fontSize: "0.8rem", marginTop: "4px", color: "var(--muted)" }}>
+            Submit your client application details. Registrations must be approved by an administrator before keys are issued.
           </p>
         </div>
 
         {error && (
           <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+            <AlertCircle size={15} />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
           <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <CheckCircle size={16} style={{ flexShrink: 0 }} />
+            <CheckCircle size={15} />
             <span>{success}</span>
           </div>
         )}
 
         {result && (
-          <div style={{ background: "var(--bg-darker)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--accent)", display: "flex", alignItems: "center", gap: "6px" }}>
+          <div style={{ background: "var(--bg-darkest)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#ffffff", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.03em" }}>
               <Terminal size={14} /> Submission Receipt
             </span>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.8rem", fontFamily: "var(--font-mono)" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.78rem", fontFamily: "var(--font-mono)" }}>
               <div><span style={{ color: "var(--muted)" }}>Registration ID:</span> <span style={{ color: "#ffffff" }}>{result.id}</span></div>
-              <div><span style={{ color: "var(--muted)" }}>Status:</span> <span style={{ color: "var(--warning)" }}>{result.status}</span></div>
+              <div><span style={{ color: "var(--muted)" }}>Status:</span> <span style={{ color: "#ffffff" }}>{result.status}</span></div>
             </div>
-            <p style={{ fontSize: "0.75rem", color: "var(--muted)", margin: 0, borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "4px" }}>
-              Please check back with the administrator to get this client approved. Once approved, you will be issued a Client ID and Client Secret.
+            <p style={{ fontSize: "0.72rem", color: "var(--muted)", margin: 0, borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "4px" }}>
+              Approve this application in the admin console to retrieve its Client ID and Secret credentials.
             </p>
           </div>
         )}
@@ -112,15 +111,15 @@ export const ClientRegister: React.FC = () => {
           <div className="form-group">
             <label htmlFor="clientName">Client Name</label>
             <div style={{ position: "relative" }}>
-              <AppWindow size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <AppWindow size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="clientName"
                 type="text"
                 className="input-control"
-                placeholder="My Developer App"
+                placeholder="My Application Name"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                style={{ paddingLeft: "42px" }}
+                style={{ paddingLeft: "36px" }}
                 required
               />
             </div>
@@ -129,41 +128,41 @@ export const ClientRegister: React.FC = () => {
           <div className="form-group">
             <label htmlFor="redirectUris">Redirect URIs (one per line)</label>
             <div style={{ position: "relative" }}>
-              <ListTodo size={16} style={{ position: "absolute", left: "14px", top: "18px", color: "var(--muted)" }} />
+              <ListTodo size={14} style={{ position: "absolute", left: "12px", top: "16px", color: "var(--muted)" }} />
               <textarea
                 id="redirectUris"
                 className="input-control"
                 placeholder="http://localhost:3000/callback"
                 value={redirectUris}
                 onChange={(e) => setRedirectUris(e.target.value)}
-                style={{ paddingLeft: "42px", minHeight: "100px", paddingTop: "14px" }}
+                style={{ paddingLeft: "36px", minHeight: "80px", paddingTop: "12px" }}
                 required
               />
             </div>
             <span style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "2px" }}>
-              Authorized callback URLs to which the browser can redirect after authentication.
+              Allowed callback redirection endpoints for your application.
             </span>
           </div>
 
           <div className="form-group">
             <label htmlFor="description">Description</label>
             <div style={{ position: "relative" }}>
-              <FileText size={16} style={{ position: "absolute", left: "14px", top: "18px", color: "var(--muted)" }} />
+              <FileText size={14} style={{ position: "absolute", left: "12px", top: "16px", color: "var(--muted)" }} />
               <textarea
                 id="description"
                 className="input-control"
-                placeholder="A short overview of what this application does..."
+                placeholder="A brief description of what this client application does..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                style={{ paddingLeft: "42px", minHeight: "80px", paddingTop: "14px" }}
+                style={{ paddingLeft: "36px", minHeight: "60px", paddingTop: "12px" }}
               />
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: "100%", marginTop: "12px" }} disabled={loading}>
+          <button type="submit" className="btn btn-primary" style={{ width: "100%", marginTop: "8px" }} disabled={loading}>
             {loading ? (
               <>
-                <Loader2 size={16} className="spin-anim" />
+                <Loader2 size={14} className="spin-anim" />
                 Submitting Registration...
               </>
             ) : (

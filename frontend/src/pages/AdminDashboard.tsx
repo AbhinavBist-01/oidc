@@ -17,7 +17,6 @@ export const AdminDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
-  // Tracks credentials displayed for approved clients, mapped by registration ID
   const [creds, setCreds] = useState<Record<string, { clientId: string; clientSecret: string }>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copiedSecret, setCopiedSecret] = useState<string | null>(null);
@@ -107,136 +106,134 @@ export const AdminDashboard: React.FC = () => {
   if (!user?.isAdmin) {
     return (
       <div className="container" style={{ maxWidth: "500px", textAlign: "center" }}>
-        <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", alignItems: "center" }}>
-          <ShieldCheck size={48} style={{ color: "var(--danger)" }} />
+        <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", alignItems: "center", border: "1px solid var(--border)" }}>
+          <ShieldCheck size={40} style={{ color: "var(--danger)" }} />
           <h2 style={{ border: "none", margin: 0, padding: 0 }}>Access Denied</h2>
-          <p>You must be an administrator to access the registration approvals dashboard.</p>
+          <p style={{ fontSize: "0.95rem" }}>You must be an administrator to access the registration approvals dashboard.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container" style={{ maxWidth: "900px" }}>
-      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div className="container" style={{ maxWidth: "850px" }}>
+      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
           <div>
             <h2 style={{ border: "none", margin: 0, padding: 0 }}>Admin Approval Queue</h2>
-            <p style={{ fontSize: "0.85rem", marginTop: "4px" }}>Approve or reject pending developer client registrations.</p>
+            <p style={{ fontSize: "0.8rem", marginTop: "4px", color: "var(--muted)" }}>Approve or reject pending client application credentials.</p>
           </div>
-          <button onClick={loadPending} className="btn" disabled={loading} style={{ height: "2.2rem" }}>
-            <RefreshCw size={14} className={loading ? "spin-anim" : ""} />
+          <button onClick={loadPending} className="btn" disabled={loading} style={{ height: "2.2rem", padding: "0 14px" }}>
+            <RefreshCw size={12} className={loading ? "spin-anim" : ""} />
             Refresh
           </button>
         </div>
 
         {error && (
           <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <AlertCircle size={16} />
+            <AlertCircle size={15} />
             <span>{error}</span>
           </div>
         )}
 
         {msg && (
           <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <ShieldCheck size={16} />
+            <ShieldCheck size={15} />
             <span>{msg}</span>
           </div>
         )}
 
         {loading && registrations.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-            <RefreshCw size={24} className="spin-anim" />
-            <span>Loading pending applications...</span>
+          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+            <RefreshCw size={20} className="spin-anim" />
+            <span style={{ fontSize: "0.85rem" }}>Loading pending applications...</span>
           </div>
         ) : registrations.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)" }}>
-            No pending registrations found.
+          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", fontSize: "0.85rem" }}>
+            No pending client registrations.
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {registrations.map((r) => {
               const clientCreds = creds[r.id];
               return (
-                <div key={r.id} className="glass-panel" style={{ background: "rgba(255,255,255,0.01)", border: "1px solid var(--border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "12px", transition: "all 0.3s ease" }}>
+                <div key={r.id} className="glass-panel" style={{ background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "10px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", flexWrap: "wrap" }}>
                     <div>
-                      <strong style={{ fontSize: "1.1rem", color: "#ffffff" }}>{r.clientName}</strong>
-                      <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "4px" }}>
-                        Application ID: <code style={{ color: "var(--accent)" }}>{r.id}</code>
+                      <strong style={{ fontSize: "1rem", color: "#ffffff" }}>{r.clientName}</strong>
+                      <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginTop: "2px" }}>
+                        Application ID: <code style={{ color: "#ffffff" }}>{r.id}</code>
                       </div>
                     </div>
 
                     {!clientCreds && (
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <button onClick={() => handleReject(r.id)} className="btn" style={{ borderColor: "rgba(239, 68, 68, 0.3)", color: "#ef4444", height: "2.2rem", padding: "0 12px" }}>
-                          <X size={14} /> Reject
+                        <button onClick={() => handleReject(r.id)} className="btn btn-secondary" style={{ height: "2rem", padding: "0 10px", fontSize: "0.8rem", color: "var(--danger)" }}>
+                          <X size={12} /> Reject
                         </button>
-                        <button onClick={() => handleApprove(r.id)} className="btn btn-primary" style={{ height: "2.2rem", padding: "0 12px" }}>
-                          <Check size={14} /> Approve
+                        <button onClick={() => handleApprove(r.id)} className="btn btn-primary" style={{ height: "2rem", padding: "0 10px", fontSize: "0.8rem" }}>
+                          <Check size={12} /> Approve
                         </button>
                       </div>
                     )}
                   </div>
 
-                  <div style={{ fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <div style={{ fontSize: "0.8rem", display: "flex", flexDirection: "column", gap: "4px" }}>
                     <div>
-                      <span style={{ color: "var(--muted)", fontWeight: 500 }}>Redirect URIs:</span>{" "}
-                      <code style={{ background: "var(--bg-darker)", padding: "2px 6px", borderRadius: "4px", fontSize: "0.75rem" }}>
+                      <span style={{ color: "var(--muted)" }}>Redirect URIs:</span>{" "}
+                      <code style={{ background: "rgba(255,255,255,0.02)", padding: "2px 6px", borderRadius: "3px", fontSize: "0.72rem", color: "#ffffff" }}>
                         {JSON.stringify(r.redirectUris)}
                       </code>
                     </div>
                     <div>
-                      <span style={{ color: "var(--muted)", fontWeight: 500 }}>Description:</span>{" "}
+                      <span style={{ color: "var(--muted)" }}>Description:</span>{" "}
                       <span style={{ color: "#ffffff" }}>{r.description || "No description provided."}</span>
                     </div>
                   </div>
 
                   {clientCreds && (
-                    <div style={{ background: "var(--bg-darker)", border: "1px dashed var(--accent)", borderRadius: "var(--radius-md)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "10px", marginTop: "4px" }}>
-                      <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--success)", display: "flex", alignItems: "center", gap: "6px" }}>
-                        <Terminal size={14} /> Approved Credentials Issued
+                    <div style={{ background: "var(--bg)", border: "1px dashed var(--border-hover)", borderRadius: "var(--radius-md)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "8px", marginTop: "2px" }}>
+                      <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#ffffff", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                        <Terminal size={12} /> Generated Credentials
                       </span>
                       
-                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        {/* Client ID */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Client ID:</span>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                          <span style={{ fontSize: "0.7rem", color: "var(--muted)" }}>Client ID:</span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "rgba(255,255,255,0.03)", padding: "6px var(--space-sm)", borderRadius: "4px", fontSize: "0.8rem", color: "var(--accent)" }}>
+                            <code style={{ flex: 1, background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "4px var(--space-sm)", borderRadius: "4px", fontSize: "0.78rem", color: "#ffffff" }}>
                               {clientCreds.clientId}
                             </code>
                             <button
                               onClick={() => copyToClipboard(clientCreds.clientId, "id", r.id)}
                               className="btn btn-secondary"
-                              style={{ height: "2rem", padding: "0 10px" }}
+                              style={{ height: "1.8rem", padding: "0 8px" }}
                             >
-                              {copiedId === r.id ? <ClipboardCheck size={14} style={{ color: "var(--success)" }} /> : <Copy size={14} />}
+                              {copiedId === r.id ? <ClipboardCheck size={12} style={{ color: "#ffffff" }} /> : <Copy size={12} />}
                             </button>
                           </div>
                         </div>
 
-                        {/* Client Secret */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Client Secret (Raw cleartext - save immediately!):</span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                          <span style={{ fontSize: "0.7rem", color: "var(--muted)" }}>Client Secret (Save now - shown only once):</span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "rgba(255,255,255,0.03)", padding: "6px var(--space-sm)", borderRadius: "4px", fontSize: "0.8rem", color: "#a7f3d0" }}>
+                            <code style={{ flex: 1, background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "4px var(--space-sm)", borderRadius: "4px", fontSize: "0.78rem", color: "#ffffff" }}>
                               {clientCreds.clientSecret}
                             </code>
                             <button
                               onClick={() => copyToClipboard(clientCreds.clientSecret, "secret", r.id)}
                               className="btn btn-secondary"
-                              style={{ height: "2rem", padding: "0 10px" }}
+                              style={{ height: "1.8rem", padding: "0 8px" }}
                             >
-                              {copiedSecret === r.id ? <ClipboardCheck size={14} style={{ color: "var(--success)" }} /> : <Copy size={14} />}
+                              {copiedSecret === r.id ? <ClipboardCheck size={12} style={{ color: "#ffffff" }} /> : <Copy size={12} />}
                             </button>
                           </div>
                         </div>
                       </div>
                       
-                      <span style={{ fontSize: "0.7rem", color: "var(--warning)" }}>
-                        * Note: The client secret is stored hashed (SHA-256) on the server. The raw secret shown above will never be displayed again.
+                      <span style={{ fontSize: "0.68rem", color: "var(--muted)" }}>
+                        * Note: The secret is stored hashed on the server. The raw cleartext is only visible here.
                       </span>
                     </div>
                   )}

@@ -45,7 +45,6 @@ export const Login: React.FC = () => {
         if (data.redirect) {
           window.location.href = data.redirect;
         } else {
-          // If no redirect, go to landing page
           window.location.href = "/";
         }
       }
@@ -57,31 +56,30 @@ export const Login: React.FC = () => {
     }
   };
 
-  // If user is already logged in and there's a redirect_uri, we can auto-redirect them or let them sign out
   const redirectUri = searchParams.get("redirect_uri");
 
   if (user) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1 }}>
-        <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", textAlign: "center", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-          <div style={{ width: "50px", height: "50px", borderRadius: "var(--radius-md)", background: "rgba(6, 182, 212, 0.1)", display: "inline-flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: "var(--accent)" }}>
-            <KeyRound size={24} />
+        <div className="glass-panel" style={{ width: "100%", maxWidth: "380px", textAlign: "center", display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
+          <div style={{ width: "42px", height: "42px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-darkest)", display: "inline-flex", alignItems: "center", justifyContent: "center", margin: "0 auto", color: "#ffffff" }}>
+            <KeyRound size={20} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Already Signed In</h2>
-          <p style={{ fontSize: "0.95rem" }}>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.1rem" }}>Already Signed In</h2>
+          <p style={{ fontSize: "0.85rem" }}>
             You are signed in as <strong style={{ color: "#ffffff" }}>{user.email}</strong>.
           </p>
           
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
             {redirectUri && (
-              <a href={redirectUri} className="btn btn-primary">
+              <a href={redirectUri} className="btn btn-primary" style={{ textDecoration: "none" }}>
                 Return to Application
               </a>
             )}
             <button onClick={logout} className="btn btn-secondary">
-              Sign In with a Different Account
+              Sign In with Another Account
             </button>
-            <Link to="/" className="btn">
+            <Link to="/" className="btn" style={{ textDecoration: "none" }}>
               Go to Developer Console
             </Link>
           </div>
@@ -92,20 +90,20 @@ export const Login: React.FC = () => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1 }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "380px", display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
         
         <div style={{ textAlign: "center" }}>
-          <div style={{ width: "50px", height: "50px", borderRadius: "var(--radius-md)", background: "rgba(6, 182, 212, 0.1)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "12px", color: "var(--accent)" }}>
-            <Lock size={24} />
+          <div style={{ width: "42px", height: "42px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-darkest)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "8px", color: "#ffffff" }}>
+            <Lock size={20} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Welcome Back</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px" }}>Sign in to your account to continue</p>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.1rem" }}>Account Sign In</h2>
+          <p style={{ fontSize: "0.8rem", marginTop: "2px", color: "var(--muted)" }}>Enter your credentials to continue</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           {error && (
-            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)" }}>
-              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: "0 0 16px 0" }}>
+              <AlertCircle size={15} style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
           )}
@@ -113,7 +111,7 @@ export const Login: React.FC = () => {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <div style={{ position: "relative" }}>
-              <Mail size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <Mail size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="email"
                 type="email"
@@ -121,7 +119,7 @@ export const Login: React.FC = () => {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: "42px" }}
+                style={{ paddingLeft: "36px" }}
                 required
               />
             </div>
@@ -130,12 +128,12 @@ export const Login: React.FC = () => {
           <div className="form-group">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <label htmlFor="password">Password</label>
-              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
+              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.75rem", color: "var(--muted)", textDecoration: "none" }}>
                 Forgot password?
               </a>
             </div>
             <div style={{ position: "relative" }}>
-              <Lock size={16} style={{ position: "absolute", left: "14px", top: "15px", color: "var(--muted)" }} />
+              <Lock size={14} style={{ position: "absolute", left: "12px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="password"
                 type="password"
@@ -143,7 +141,7 @@ export const Login: React.FC = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingLeft: "42px" }}
+                style={{ paddingLeft: "36px" }}
                 required
               />
             </div>
@@ -152,7 +150,7 @@ export const Login: React.FC = () => {
           <button type="submit" className="btn btn-primary" style={{ width: "100%", marginTop: "8px" }} disabled={loading}>
             {loading ? (
               <>
-                <Loader2 size={16} className="spin-anim" />
+                <Loader2 size={14} className="spin-anim" />
                 Signing in...
               </>
             ) : (
@@ -161,16 +159,16 @@ export const Login: React.FC = () => {
           </button>
         </form>
 
-        <div style={{ textAlign: "center", fontSize: "0.8rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "6px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.78rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "6px" }}>
           <span>
             Don't have an account?{" "}
-            <Link to={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)" }}>
+            <Link to={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)" }}>
               Sign up
             </Link>
           </span>
           <div style={{ borderTop: "1px solid var(--border)", paddingTop: "10px", marginTop: "4px" }}>
-            <Link to="/clients/register" style={{ marginRight: "12px" }}>Developer Console</Link>
-            <Link to="/admin/dashboard">Admin Panel</Link>
+            <Link to="/clients/register" style={{ marginRight: "12px", textDecoration: "none" }}>Developer Console</Link>
+            <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>Admin Panel</Link>
           </div>
         </div>
       </div>
