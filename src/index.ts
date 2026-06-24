@@ -643,7 +643,8 @@ app.post("/o/token", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  if (!client || client.clientSecret !== clientSecret) {
+  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
       error_description: "Client authentication failed.",
@@ -843,7 +844,8 @@ app.post("/o/revoke", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  if (!client || client.clientSecret !== clientSecret) {
+  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
       error_description: "Client authentication failed.",
@@ -879,7 +881,8 @@ app.post("/o/introspect", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  if (!client || client.clientSecret !== clientSecret) {
+  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
       error_description: "Client authentication failed.",
