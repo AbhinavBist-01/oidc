@@ -67,6 +67,8 @@ export const authorizationCodes = pgTable("authorization_codes", {
   redirectUri: text("redirect_uri").notNull(),
   scope: text("scope").notNull(),
   nonce: text("nonce"),
+  codeChallenge: text("code_challenge"),
+  codeChallengeMethod: varchar("code_challenge_method", { length: 10 }),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
