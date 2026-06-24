@@ -134,10 +134,15 @@ export async function approveRegistration(
     })
     .where(eq(clientRegistrations.id, registrationId));
 
+  const hashedSecret = crypto
+    .createHash("sha256")
+    .update(clientSecret)
+    .digest("hex");
+
   await db.insert(clients).values({
     clientId,
     clientName: registration.clientName,
-    clientSecret,
+    clientSecret: hashedSecret,
     redirectUri: registration.redirectUris,
     grantTypes: ["authorization_code"],
     userId: registration.createdBy,

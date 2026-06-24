@@ -353,6 +353,7 @@ app.get("/o/authorize", async (req, res) => {
     nonce,
     code_challenge,
     code_challenge_method,
+    prompt,
   } = req.query;
 
   if (
@@ -412,11 +413,44 @@ app.get("/o/authorize", async (req, res) => {
   const session = sessionId ? await getSessionById(sessionId) : null;
 
   if (!session || !isSessionValid(session.expiresAt)) {
+    if (prompt === "none") {
+      const redirectUrl = new URL(redirect_uri);
+      redirectUrl.searchParams.set("error", "login_required");
+      if (typeof state === "string") {
+        redirectUrl.searchParams.set("state", state);
+      }
+      res.redirect(redirectUrl.toString());
+      return;
+    }
+
     const loginParams = new URLSearchParams({
       redirect_uri: req.originalUrl,
     });
 
     res.redirect(`/o/authenticate?${loginParams.toString()}`);
+    return;
+  }
+
+  if (prompt === "none") {
+    const userId = session.userId;
+    const code = await storeAuthorizationCode(
+      client.clientId,
+      userId,
+      redirect_uri,
+      scope,
+      typeof nonce === "string" ? nonce : undefined,
+      typeof code_challenge === "string" ? code_challenge : undefined,
+      typeof code_challenge_method === "string"
+        ? code_challenge_method
+        : undefined,
+    );
+
+    const redirectUrl = new URL(redirect_uri);
+    redirectUrl.searchParams.set("code", code);
+    if (typeof state === "string") {
+      redirectUrl.searchParams.set("state", state);
+    }
+    res.redirect(redirectUrl.toString());
     return;
   }
 
