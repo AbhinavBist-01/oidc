@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Header } from "./components/Header";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
@@ -8,6 +8,28 @@ import { SignUp } from "./pages/SignUp";
 import { Consent } from "./pages/Consent";
 import { ClientRegister } from "./pages/ClientRegister";
 import { AdminDashboard } from "./pages/AdminDashboard";
+
+const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({ children, adminOnly }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", color: "var(--muted)" }}>
+        Loading session...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to={`/o/authenticate?redirect_uri=${encodeURIComponent(window.location.pathname + window.location.search)}`} replace />;
+  }
+
+  if (adminOnly && !user.isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 export const App: React.FC = () => {
   return (
@@ -20,9 +42,9 @@ export const App: React.FC = () => {
               <Route path="/" element={<Landing />} />
               <Route path="/o/authenticate" element={<Login />} />
               <Route path="/o/sign-up" element={<SignUp />} />
-              <Route path="/o/authorize/consent" element={<Consent />} />
-              <Route path="/clients/register" element={<ClientRegister />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/o/authorize/consent" element={<ProtectedRoute><Consent /></ProtectedRoute>} />
+              <Route path="/clients/register" element={<ProtectedRoute><ClientRegister /></ProtectedRoute>} />
+              <Route path="/admin/dashboard" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
               
               {/* Fallback to landing */}
               <Route path="*" element={<Navigate to="/" replace />} />

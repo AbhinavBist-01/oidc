@@ -7,5 +7,21 @@ export default defineConfig({
   build: {
     outDir: '../public',
     emptyOutDir: true,
+  },
+  server: {
+    proxy: {
+      '/o': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+      },
+      '/clients': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+      },
+      '/admin': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+      },
+    }
   }
 })

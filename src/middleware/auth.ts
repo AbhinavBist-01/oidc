@@ -24,29 +24,33 @@ export async function requireSession(
   next: NextFunction,
 ): Promise<void> {
   try {
+    const handleUnauthorized = () => {
+      if (req.method === "GET" && ["/clients/register", "/admin/dashboard", "/o/authorize/consent"].includes(req.path)) {
+        res.redirect(
+          `/o/authenticate?${new URLSearchParams({ redirect_uri: req.originalUrl }).toString()}`,
+        );
+      } else {
+        res.status(401).json({ message: "Unauthorized" });
+      }
+    };
+
     const sessionId = getSessionCookie(req);
     if (!sessionId) {
-      res.redirect(
-        `/o/authenticate?${new URLSearchParams({ redirect_uri: req.originalUrl }).toString()}`,
-      );
+      handleUnauthorized();
       return;
     }
 
     const session = await getSessionById(sessionId);
     if (!session) {
       clearSessionCookie(res);
-      res.redirect(
-        `/o/authenticate?${new URLSearchParams({ redirect_uri: req.originalUrl }).toString()}`,
-      );
+      handleUnauthorized();
       return;
     }
 
     if (!isSessionValid(session.expiresAt)) {
       await deleteSession(sessionId);
       clearSessionCookie(res);
-      res.redirect(
-        `/o/authenticate?${new URLSearchParams({ redirect_uri: req.originalUrl }).toString()}`,
-      );
+      handleUnauthorized();
       return;
     }
 
