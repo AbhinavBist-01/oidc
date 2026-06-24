@@ -52,6 +52,7 @@ export const sessions = pgTable("sessions", {
     .notNull()
     .references(() => usersTable.id),
   refreshToken: varchar("refresh_token", { length: 256 }).notNull().unique(),
+  scope: text("scope").default("openid").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

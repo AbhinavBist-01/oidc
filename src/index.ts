@@ -8,7 +8,7 @@ import jose from "node-jose";
 import { db } from "./db";
 import { usersTable } from "./db/schema";
 import { PRIVATE_KEY, PUBLIC_KEY } from "./utils/cert";
-import type { JWTClaims } from "./utils/user-token";
+import { type JWTClaims, filterClaimsByScope } from "./utils/user-token";
 import cookieParser from "cookie-parser";
 import { requireSession } from "./middleware/auth";
 import { isAdmin } from "./middleware/admin";
@@ -213,15 +213,10 @@ app.get("/o/userinfo", async (req, res) => {
     return;
   }
 
-  res.json({
-    sub: user.id,
-    email: user.email,
-    email_verified: user.emailVerified,
-    given_name: user.firstName || "",
-    family_name: user.lastName || "",
-    name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-    picture: user.profileImageURL ?? null,
-  });
+  const scope = claims.scope || "openid";
+  const filteredClaims = filterClaimsByScope(user, scope);
+
+  res.json(filteredClaims);
 });
 
 app.get("/admin/registrations", requireSession, isAdmin, async (req, res) => {
@@ -626,34 +621,30 @@ app.post("/o/token", async (req, res) => {
     const ISSUER = `http://localhost:${PORT}`;
     const now = Math.floor(Date.now() / 1000);
 
-    const claims: JWTClaims = {
+    const accessTokenClaims = {
       iss: ISSUER,
       sub: user.id.toString(),
-      email: user.email,
-      email_verified: user.emailVerified,
       exp: now + 3600,
       iat: now,
-      given_name: user.firstName || "",
-      family_name: user.lastName || "",
-      name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-      picture: user.profileImageURL || null,
+      scope: authCode.scope,
     };
-    const access_token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
 
-    const id_token = JWT.sign(
-      {
-        ...claims,
-        aud: client.clientId,
-        nonce: authCode.nonce,
-      },
-      PRIVATE_KEY,
-      { algorithm: "RS256" },
-    );
+    const filteredClaims = filterClaimsByScope(user, authCode.scope);
+    const idTokenClaims = {
+      iss: ISSUER,
+      ...filteredClaims,
+      aud: client.clientId,
+      nonce: authCode.nonce,
+      exp: now + 3600,
+      iat: now,
+    };
+    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
 
     await deleteAuthorizationCode(code);
 
     // Create session to generate refresh token
-    const session = await createSession(user.id.toString());
+    const session = await createSession(user.id.toString(), authCode.scope);
 
     res.json({
       access_token,
@@ -698,35 +689,31 @@ app.post("/o/token", async (req, res) => {
       return;
     }
 
-    // Rotate refresh token: delete old session, create new session
+    // Rotate refresh token: delete old session, create new session (preserving scope)
     await deleteSession(session.id);
-    const newSession = await createSession(user.id.toString());
+    const newSession = await createSession(user.id.toString(), session.scope);
 
     const ISSUER = `http://localhost:${PORT}`;
     const now = Math.floor(Date.now() / 1000);
 
-    const claims: JWTClaims = {
+    const accessTokenClaims = {
       iss: ISSUER,
       sub: user.id.toString(),
-      email: user.email,
-      email_verified: user.emailVerified,
       exp: now + 3600,
       iat: now,
-      given_name: user.firstName || "",
-      family_name: user.lastName || "",
-      name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-      picture: user.profileImageURL || null,
+      scope: session.scope,
     };
-    const access_token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
 
-    const id_token = JWT.sign(
-      {
-        ...claims,
-        aud: client.clientId,
-      },
-      PRIVATE_KEY,
-      { algorithm: "RS256" },
-    );
+    const filteredClaims = filterClaimsByScope(user, session.scope);
+    const idTokenClaims = {
+      iss: ISSUER,
+      ...filteredClaims,
+      aud: client.clientId,
+      exp: now + 3600,
+      iat: now,
+    };
+    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
 
     res.json({
       access_token,

@@ -8,6 +8,7 @@ export interface Session {
   id: string;
   userId: string;
   refreshToken: string;
+  scope: string;
   expiresAt: Date;
   createdAt: Date;
 }
@@ -20,7 +21,7 @@ export function generateRefreshToken(): string {
 
 // Create a session
 
-export async function createSession(userId: string): Promise<Session> {
+export async function createSession(userId: string, scope?: string): Promise<Session> {
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
   const refreshToken = generateRefreshToken();
@@ -34,6 +35,7 @@ export async function createSession(userId: string): Promise<Session> {
     .values({
       userId,
       refreshToken: hashedRefreshToken,
+      scope: scope || "openid",
       expiresAt,
       createdAt: now,
     })
@@ -45,6 +47,7 @@ export async function createSession(userId: string): Promise<Session> {
     id: createdSession.id,
     userId: createdSession.userId,
     refreshToken,
+    scope: createdSession.scope,
     expiresAt,
     createdAt: now,
   };
