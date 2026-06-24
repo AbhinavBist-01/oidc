@@ -77,3 +77,22 @@ export async function deleteSession(id: string): Promise<void> {
 export async function deleteSessionsByUserId(userId: string): Promise<void> {
   await db.delete(sessions).where(eq(sessions.userId, userId));
 }
+
+// Retrieve a session using cleartext refresh token
+export async function getSessionByRefreshToken(
+  refreshToken: string,
+): Promise<Session | null> {
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  const [session] = await db
+    .select()
+    .from(sessions)
+    .where(eq(sessions.refreshToken, hashedRefreshToken))
+    .limit(1);
+
+  return session || null;
+}
+

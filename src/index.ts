@@ -18,10 +18,15 @@ import {
   getPendingRegistrations,
   rejectRegistration,
 } from "./utils/client";
-import { createSession } from "./utils/session";
+import {
+  createSession,
+  deleteSession,
+  getSessionById,
+  isSessionValid,
+  getSessionByRefreshToken,
+} from "./utils/session";
 import { clearSessionCookie, setSessionCookie } from "./utils/cookie";
 import { getSessionCookie } from "./utils/cookie";
-import { deleteSession, getSessionById, isSessionValid } from "./utils/session";
 import { getApprovedClient } from "./utils/client";
 import {
   storeAuthorizationCode,
@@ -64,7 +69,6 @@ app.get("/.well-known/jwks.json", async (req, res) => {
 });
 
 // Authentication Endpoints
-
 app.get("/o/authenticate", (req, res) => {
   res.sendFile(path.resolve("public", "authenticate.html"));
 });
@@ -410,7 +414,14 @@ app.get("/o/authorize/consent", requireSession, async (req, res) => {
 });
 
 app.post("/o/authorize/decision", requireSession, async (req, res) => {
-  const { action, client_id, redirect_uri, scope = "", state, nonce } = req.body;
+  const {
+    action,
+    client_id,
+    redirect_uri,
+    scope = "",
+    state,
+    nonce,
+  } = req.body;
 
   if (
     typeof action !== "string" ||
@@ -468,103 +479,196 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
 });
 
 app.post("/o/token", async (req, res) => {
-  const { grant_type, code, redirect_uri, client_id, client_secret } = req.body;
+  const { grant_type, code, redirect_uri, client_id, client_secret, refresh_token } = req.body;
 
-  if (grant_type !== "authorization_code") {
+  if (grant_type !== "authorization_code" && grant_type !== "refresh_token") {
     res.status(400).json({
       error: "unsupported_grant_type",
-      error_description: "Only authorization_code grant type is supported.",
+      error_description: "Only authorization_code and refresh_token grant types are supported.",
     });
     return;
   }
 
-  if (
-    typeof code !== "string" ||
-    typeof redirect_uri !== "string" ||
-    typeof client_id !== "string" ||
-    typeof client_secret !== "string"
-  ) {
-    res.status(400).json({
-      error: "invalid_request",
-      error_description:
-        "code, redirect_uri, client_id, and client_secret are required.",
+  if (grant_type === "authorization_code") {
+    if (
+      typeof code !== "string" ||
+      typeof redirect_uri !== "string" ||
+      typeof client_id !== "string" ||
+      typeof client_secret !== "string"
+    ) {
+      res.status(400).json({
+        error: "invalid_request",
+        error_description:
+          "code, redirect_uri, client_id, and client_secret are required.",
+      });
+      return;
+    }
+
+    const client = await getApprovedClient(client_id);
+    if (!client || client.clientSecret !== client_secret) {
+      res.status(401).json({
+        error: "invalid_client",
+        error_description: "Client authentication failed.",
+      });
+      return;
+    }
+
+    const authCode = await getAndValidateAuthorizationCode(code);
+    if (
+      !authCode ||
+      authCode.clientId !== client_id ||
+      authCode.redirectUri !== redirect_uri
+    ) {
+      res.status(400).json({
+        error: "invalid_grant",
+        error_description:
+          "Authorization code is invalid, expired, or mismatched.",
+      });
+      return;
+    }
+
+    const [user] = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, authCode.userId) as any)
+      .limit(1);
+
+    if (!user) {
+      res.status(400).json({
+        error: "invalid_grant",
+        error_description: "Authorization code subject user is invalid.",
+      });
+      return;
+    }
+
+    const ISSUER = `http://localhost:${PORT}`;
+    const now = Math.floor(Date.now() / 1000);
+
+    const claims: JWTClaims = {
+      iss: ISSUER,
+      sub: user.id.toString(),
+      email: user.email,
+      email_verified: user.emailVerified,
+      exp: now + 3600,
+      iat: now,
+      given_name: user.firstName || "",
+      family_name: user.lastName || "",
+      name: [user.firstName, user.lastName].filter(Boolean).join(" "),
+      picture: user.profileImageURL || null,
+    };
+    const access_token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+
+    const id_token = JWT.sign(
+      {
+        ...claims,
+        aud: client.clientId,
+        nonce: authCode.nonce,
+      },
+      PRIVATE_KEY,
+      { algorithm: "RS256" },
+    );
+
+    await deleteAuthorizationCode(code);
+
+    // Create session to generate refresh token
+    const session = await createSession(user.id.toString());
+
+    res.json({
+      access_token,
+      id_token,
+      refresh_token: session.refreshToken,
+      token_type: "Bearer",
+      expires_in: 3600,
+      scope: authCode.scope,
     });
     return;
   }
 
-  const client = await getApprovedClient(client_id);
-  if (!client || client.clientSecret !== client_secret) {
-    res.status(401).json({
-      error: "invalid_client",
-      error_description: "Client authentication failed.",
+  if (grant_type === "refresh_token") {
+    if (
+      typeof refresh_token !== "string" ||
+      typeof client_id !== "string" ||
+      typeof client_secret !== "string"
+    ) {
+      res.status(400).json({
+        error: "invalid_request",
+        error_description:
+          "refresh_token, client_id, and client_secret are required.",
+      });
+      return;
+    }
+
+    const client = await getApprovedClient(client_id);
+    if (!client || client.clientSecret !== client_secret) {
+      res.status(401).json({
+        error: "invalid_client",
+        error_description: "Client authentication failed.",
+      });
+      return;
+    }
+
+    const session = await getSessionByRefreshToken(refresh_token);
+    if (!session || !isSessionValid(session.expiresAt)) {
+      res.status(400).json({
+        error: "invalid_grant",
+        error_description: "Refresh token is invalid or expired.",
+      });
+      return;
+    }
+
+    const [user] = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, session.userId) as any)
+      .limit(1);
+
+    if (!user) {
+      res.status(400).json({
+        error: "invalid_grant",
+        error_description: "Session user is invalid.",
+      });
+      return;
+    }
+
+    // Rotate refresh token: delete old session, create new session
+    await deleteSession(session.id);
+    const newSession = await createSession(user.id.toString());
+
+    const ISSUER = `http://localhost:${PORT}`;
+    const now = Math.floor(Date.now() / 1000);
+
+    const claims: JWTClaims = {
+      iss: ISSUER,
+      sub: user.id.toString(),
+      email: user.email,
+      email_verified: user.emailVerified,
+      exp: now + 3600,
+      iat: now,
+      given_name: user.firstName || "",
+      family_name: user.lastName || "",
+      name: [user.firstName, user.lastName].filter(Boolean).join(" "),
+      picture: user.profileImageURL || null,
+    };
+    const access_token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
+
+    const id_token = JWT.sign(
+      {
+        ...claims,
+        aud: client.clientId,
+      },
+      PRIVATE_KEY,
+      { algorithm: "RS256" },
+    );
+
+    res.json({
+      access_token,
+      id_token,
+      refresh_token: newSession.refreshToken,
+      token_type: "Bearer",
+      expires_in: 3600,
     });
     return;
   }
-
-  const authCode = await getAndValidateAuthorizationCode(code);
-  if (
-    !authCode ||
-    authCode.clientId !== client_id ||
-    authCode.redirectUri !== redirect_uri
-  ) {
-    res.status(400).json({
-      error: "invalid_grant",
-      error_description:
-        "Authorization code is invalid, expired, or mismatched.",
-    });
-    return;
-  }
-
-  const [user] = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.id, authCode.userId) as any)
-    .limit(1);
-
-  if (!user) {
-    res.status(400).json({
-      error: "invalid_grant",
-      error_description: "Authorization code subject user is invalid.",
-    });
-    return;
-  }
-
-  const ISSUER = `http://localhost:${PORT}`;
-  const now = Math.floor(Date.now() / 1000);
-
-  const claims: JWTClaims = {
-    iss: ISSUER,
-    sub: user.id.toString(),
-    email: user.email,
-    email_verified: user.emailVerified,
-    exp: now + 3600,
-    iat: now,
-    given_name: user.firstName || "",
-    family_name: user.lastName || "",
-    name: [user.firstName, user.lastName].filter(Boolean).join(" "),
-    picture: user.profileImageURL || null,
-  };
-  const access_token = JWT.sign(claims, PRIVATE_KEY, { algorithm: "RS256" });
-
-  const id_token = JWT.sign(
-    {
-      ...claims,
-      aud: client.clientId,
-      nonce: authCode.nonce,
-    },
-    PRIVATE_KEY,
-    { algorithm: "RS256" },
-  );
-
-  await deleteAuthorizationCode(code);
-
-  res.json({
-    access_token,
-    id_token,
-    token_type: "Bearer",
-    expires_in: 3600,
-    scope: authCode.scope,
-  });
 });
 
 app.post("/o/logout", async (req, res) => {
