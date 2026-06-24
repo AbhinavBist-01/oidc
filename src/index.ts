@@ -739,6 +739,108 @@ app.post("/o/token", async (req, res) => {
   }
 });
 
+app.post("/o/revoke", async (req, res) => {
+  const { clientId, clientSecret } = getClientCredentials(req);
+  if (!clientId || !clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client credentials are required.",
+    });
+    return;
+  }
+
+  const client = await getApprovedClient(clientId);
+  if (!client || client.clientSecret !== clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client authentication failed.",
+    });
+    return;
+  }
+
+  const { token } = req.body;
+  if (typeof token !== "string") {
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "token is required.",
+    });
+    return;
+  }
+
+  const session = await getSessionByRefreshToken(token);
+  if (session) {
+    await deleteSession(session.id);
+  }
+
+  res.status(200).send();
+});
+
+app.post("/o/introspect", async (req, res) => {
+  const { clientId, clientSecret } = getClientCredentials(req);
+  if (!clientId || !clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client credentials are required.",
+    });
+    return;
+  }
+
+  const client = await getApprovedClient(clientId);
+  if (!client || client.clientSecret !== clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client authentication failed.",
+    });
+    return;
+  }
+
+  const { token } = req.body;
+  if (typeof token !== "string") {
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "token is required.",
+    });
+    return;
+  }
+
+  // 1. Try to verify it as a JWT Access Token
+  try {
+    const claims = JWT.verify(token, PUBLIC_KEY, {
+      algorithms: ["RS256"],
+    }) as JWTClaims;
+
+    res.json({
+      active: true,
+      scope: "openid profile email",
+      client_id: client.clientId,
+      sub: claims.sub,
+      exp: claims.exp,
+      iat: claims.iat,
+      iss: claims.iss,
+      token_type: "Bearer",
+    });
+    return;
+  } catch (err) {
+    // Fail silently and proceed to check refresh token
+  }
+
+  // 2. Try to verify it as a Refresh Token
+  const session = await getSessionByRefreshToken(token);
+  if (session && isSessionValid(session.expiresAt)) {
+    res.json({
+      active: true,
+      scope: "openid profile email",
+      sub: session.userId,
+      exp: Math.floor(session.expiresAt.getTime() / 1000),
+    });
+    return;
+  }
+
+  res.json({
+    active: false,
+  });
+});
+
 app.post("/o/logout", async (req, res) => {
   const sessionId = getSessionCookie(req);
 
