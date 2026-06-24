@@ -182,9 +182,10 @@ app.get("/o/userinfo", async (req, res) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
-    res
-      .status(401)
-      .json({ message: "Invalid or missing authorization header" });
+    res.status(401).json({
+      error: "invalid_request",
+      error_description: "Invalid or missing authorization header.",
+    });
     return;
   }
 
@@ -198,7 +199,10 @@ app.get("/o/userinfo", async (req, res) => {
       algorithms: ["RS256"],
     }) as JWTClaims;
   } catch (err) {
-    res.status(401).json({ message: "Invalid or expired token." });
+    res.status(401).json({
+      error: "invalid_token",
+      error_description: "The access token is invalid or expired.",
+    });
     return;
   }
 
@@ -209,7 +213,10 @@ app.get("/o/userinfo", async (req, res) => {
     .limit(1);
 
   if (!user) {
-    res.status(404).json({ message: "User not found." });
+    res.status(404).json({
+      error: "invalid_grant",
+      error_description: "The user associated with the token was not found.",
+    });
     return;
   }
 
@@ -323,7 +330,10 @@ app.get("/o/authorize", async (req, res) => {
     typeof redirect_uri !== "string" ||
     typeof scope !== "string"
   ) {
-    res.status(400).json({ message: "Invalid authorization request" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "Missing or invalid authorization parameters.",
+    });
     return;
   }
 
@@ -333,27 +343,37 @@ app.get("/o/authorize", async (req, res) => {
     code_challenge_method !== "plain"
   ) {
     res.status(400).json({
-      message:
+      error: "invalid_request",
+      error_description:
         "Invalid code_challenge_method. Supported values are S256 and plain.",
     });
     return;
   }
 
   if (!scope.split(" ").includes("openid")) {
-    res.status(400).json({ message: "Scope must include 'openid'" });
+    res.status(400).json({
+      error: "invalid_scope",
+      error_description: "Scope must include 'openid'.",
+    });
     return;
   }
 
   const client = await getApprovedClient(client_id);
 
   if (!client) {
-    res.status(400).json({ message: "Invalid client_id" });
+    res.status(400).json({
+      error: "invalid_client",
+      error_description: "The client_id is invalid.",
+    });
     return;
   }
   const allowedRedirectUris = client.redirectUri as string[];
 
   if (!allowedRedirectUris.includes(redirect_uri)) {
-    res.status(400).json({ message: "Invalid redirect_uri" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "The redirect_uri is invalid or does not match.",
+    });
     return;
   }
 
@@ -407,19 +427,28 @@ app.get("/o/authorize/consent", requireSession, async (req, res) => {
     typeof redirect_uri !== "string" ||
     typeof scope !== "string"
   ) {
-    res.status(400).json({ message: "Invalid consent request" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "Invalid consent request parameters.",
+    });
     return;
   }
 
   const client = await getApprovedClient(client_id);
   if (!client) {
-    res.status(400).json({ message: "Invalid client_id" });
+    res.status(400).json({
+      error: "invalid_client",
+      error_description: "The client_id is invalid.",
+    });
     return;
   }
 
   const allowedRedirectUris = client.redirectUri as string[];
   if (!allowedRedirectUris.includes(redirect_uri)) {
-    res.status(400).json({ message: "Invalid redirect_uri" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "The redirect_uri is invalid.",
+    });
     return;
   }
 
@@ -463,19 +492,28 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
     typeof redirect_uri !== "string" ||
     typeof scope !== "string"
   ) {
-    res.status(400).json({ message: "Invalid authorization decision request" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "Invalid authorization decision request parameters.",
+    });
     return;
   }
 
   const client = await getApprovedClient(client_id);
   if (!client) {
-    res.status(400).json({ message: "Invalid client_id" });
+    res.status(400).json({
+      error: "invalid_client",
+      error_description: "The client_id is invalid.",
+    });
     return;
   }
 
   const allowedRedirectUris = client.redirectUri as string[];
   if (!allowedRedirectUris.includes(redirect_uri)) {
-    res.status(400).json({ message: "Invalid redirect_uri" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "The redirect_uri is invalid.",
+    });
     return;
   }
 
@@ -491,7 +529,10 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
   }
 
   if (action !== "allow") {
-    res.status(400).json({ message: "Invalid decision action" });
+    res.status(400).json({
+      error: "invalid_request",
+      error_description: "Invalid decision action.",
+    });
     return;
   }
 
