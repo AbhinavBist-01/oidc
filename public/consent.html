@@ -129,6 +129,8 @@
       const scope = params.get("scope") || "";
       const state = params.get("state") || "";
       const nonce = params.get("nonce") || "";
+      const codeChallenge = params.get("code_challenge") || "";
+      const codeChallengeMethod = params.get("code_challenge_method") || "";
 
       document.getElementById("clientId").textContent = clientId;
       document.getElementById("redirectUri").textContent = redirectUri;
@@ -157,6 +159,8 @@
               scope,
               state,
               nonce,
+              code_challenge: codeChallenge,
+              code_challenge_method: codeChallengeMethod,
             }),
           });
           const data = await res.json().catch(() => ({}));

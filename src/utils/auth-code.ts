@@ -10,6 +10,8 @@ export interface AuthorizationCode {
   redirectUri: string;
   scope: string;
   nonce?: string;
+  codeChallenge?: string;
+  codeChallengeMethod?: string;
   expiresAt: Date;
   createdAt: Date;
 }
@@ -28,6 +30,8 @@ export async function storeAuthorizationCode(
   redirectUri: string,
   scope: string,
   nonce?: string,
+  codeChallenge?: string,
+  codeChallengeMethod?: string,
 ): Promise<string> {
   const code = generateAuthorizationCode();
   const now = new Date();
@@ -40,6 +44,8 @@ export async function storeAuthorizationCode(
     redirectUri,
     scope,
     nonce,
+    codeChallenge: codeChallenge || null,
+    codeChallengeMethod: codeChallengeMethod || null,
     expiresAt,
     createdAt: now,
   });
@@ -74,6 +80,8 @@ export async function getAndValidateAuthorizationCode(
     redirectUri: authCode.redirectUri,
     scope: authCode.scope,
     nonce: authCode.nonce || undefined,
+    codeChallenge: authCode.codeChallenge || undefined,
+    codeChallengeMethod: authCode.codeChallengeMethod || undefined,
     expiresAt: authCode.expiresAt,
     createdAt: authCode.createdAt,
   };

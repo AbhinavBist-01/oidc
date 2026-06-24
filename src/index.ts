@@ -317,6 +317,8 @@ app.get("/o/authorize", async (req, res) => {
     scope = "",
     state,
     nonce,
+    code_challenge,
+    code_challenge_method,
   } = req.query;
 
   if (
@@ -326,6 +328,18 @@ app.get("/o/authorize", async (req, res) => {
     typeof scope !== "string"
   ) {
     res.status(400).json({ message: "Invalid authorization request" });
+    return;
+  }
+
+  if (
+    code_challenge_method &&
+    code_challenge_method !== "S256" &&
+    code_challenge_method !== "plain"
+  ) {
+    res.status(400).json({
+      message:
+        "Invalid code_challenge_method. Supported values are S256 and plain.",
+    });
     return;
   }
 
@@ -370,12 +384,27 @@ app.get("/o/authorize", async (req, res) => {
   if (typeof nonce === "string") {
     consentParams.set("nonce", nonce);
   }
+  if (typeof code_challenge === "string") {
+    consentParams.set("code_challenge", code_challenge);
+    consentParams.set(
+      "code_challenge_method",
+      (code_challenge_method as string) || "plain",
+    );
+  }
 
   res.redirect(`/o/authorize/consent?${consentParams.toString()}`);
 });
 
 app.get("/o/authorize/consent", requireSession, async (req, res) => {
-  const { client_id, redirect_uri, scope = "", state, nonce } = req.query;
+  const {
+    client_id,
+    redirect_uri,
+    scope = "",
+    state,
+    nonce,
+    code_challenge,
+    code_challenge_method,
+  } = req.query;
 
   if (
     typeof client_id !== "string" ||
@@ -409,6 +438,13 @@ app.get("/o/authorize/consent", requireSession, async (req, res) => {
   if (typeof nonce === "string") {
     params.set("nonce", nonce);
   }
+  if (typeof code_challenge === "string") {
+    params.set("code_challenge", code_challenge);
+    params.set(
+      "code_challenge_method",
+      (code_challenge_method as string) || "plain",
+    );
+  }
 
   res.redirect(`/consent.html?${params.toString()}`);
 });
@@ -421,6 +457,8 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
     scope = "",
     state,
     nonce,
+    code_challenge,
+    code_challenge_method,
   } = req.body;
 
   if (
@@ -468,6 +506,10 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
     redirect_uri,
     scope,
     typeof nonce === "string" ? nonce : undefined,
+    typeof code_challenge === "string" ? code_challenge : undefined,
+    typeof code_challenge_method === "string"
+      ? code_challenge_method
+      : undefined,
   );
 
   redirectUrl.searchParams.set("code", code);
@@ -479,7 +521,7 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
 });
 
 app.post("/o/token", async (req, res) => {
-  const { grant_type, code, redirect_uri, client_id, client_secret, refresh_token } = req.body;
+  const { grant_type, code, redirect_uri, client_id, client_secret, refresh_token, code_verifier } = req.body;
 
   if (grant_type !== "authorization_code" && grant_type !== "refresh_token") {
     res.status(400).json({
@@ -525,6 +567,42 @@ app.post("/o/token", async (req, res) => {
           "Authorization code is invalid, expired, or mismatched.",
       });
       return;
+    }
+
+    // PKCE Verification
+    if (authCode.codeChallenge) {
+      if (typeof code_verifier !== "string") {
+        res.status(400).json({
+          error: "invalid_grant",
+          error_description: "code_verifier is required for PKCE validation.",
+        });
+        return;
+      }
+
+      let isValidChallenge = false;
+      if (authCode.codeChallengeMethod === "plain") {
+        isValidChallenge = code_verifier === authCode.codeChallenge;
+      } else if (authCode.codeChallengeMethod === "S256") {
+        const calculatedChallenge = crypto
+          .createHash("sha256")
+          .update(code_verifier)
+          .digest("base64url");
+        isValidChallenge = calculatedChallenge === authCode.codeChallenge;
+      } else {
+        res.status(400).json({
+          error: "invalid_request",
+          error_description: "Unsupported code_challenge_method.",
+        });
+        return;
+      }
+
+      if (!isValidChallenge) {
+        res.status(400).json({
+          error: "invalid_grant",
+          error_description: "code_verifier verification failed.",
+        });
+        return;
+      }
     }
 
     const [user] = await db
