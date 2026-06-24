@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve("public", "landing.html"));
+  res.sendFile(path.resolve("public", "index.html"));
 });
 app.get("/health", (req, res) => {
   res.json({
@@ -102,19 +102,19 @@ app.get("/.well-known/jwks.json", async (req, res) => {
 
 // Authentication Endpoints
 app.get("/o/authenticate", (req, res) => {
-  res.sendFile(path.resolve("public", "authenticate.html"));
+  res.sendFile(path.resolve("public", "index.html"));
 });
 
 app.get("/o/sign-up", (req, res) => {
-  res.sendFile(path.resolve("public", "singup.html"));
+  res.sendFile(path.resolve("public", "index.html"));
 });
 
 app.get("/clients/register", requireSession, (req, res) => {
-  res.sendFile(path.resolve("public", "client-register.html"));
+  res.sendFile(path.resolve("public", "index.html"));
 });
 
 app.get("/admin/dashboard", requireSession, isAdmin, (req, res) => {
-  res.sendFile(path.resolve("public", "admin-dashboard.html"));
+  res.sendFile(path.resolve("public", "index.html"));
 });
 
 app.post("/o/authenticate/sign-in", async (req, res) => {
@@ -536,7 +536,7 @@ app.get("/o/authorize/consent", requireSession, async (req, res) => {
     );
   }
 
-  res.redirect(`/consent.html?${params.toString()}`);
+  res.sendFile(path.resolve("public", "index.html"));
 });
 
 app.post("/o/authorize/decision", requireSession, async (req, res) => {
