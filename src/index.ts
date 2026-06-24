@@ -42,6 +42,18 @@ app.use(express.json());
 app.use(express.static(path.resolve("public")));
 app.use(cookieParser());
 
+// Custom CORS Middleware
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.resolve("public", "landing.html"));
 });
@@ -61,6 +73,25 @@ app.get("/.well-known/openid-configuration", (req, res) => {
     token_endpoint: `${ISSUER}/o/token`,
     userinfo_endpoint: `${ISSUER}/o/userinfo`,
     jwks_uri: `${ISSUER}/.well-known/jwks.json`,
+    end_session_endpoint: `${ISSUER}/o/logout`,
+    scopes_supported: ["openid", "profile", "email"],
+    response_types_supported: ["code"],
+    subject_types_supported: ["public"],
+    id_token_signing_alg_values_supported: ["RS256"],
+    token_endpoint_auth_methods_supported: [
+      "client_secret_post",
+      "client_secret_basic",
+    ],
+    claims_supported: [
+      "sub",
+      "iss",
+      "name",
+      "given_name",
+      "family_name",
+      "picture",
+      "email",
+      "email_verified",
+    ],
   });
 });
 
