@@ -869,6 +869,50 @@ app.post("/o/introspect", async (req, res) => {
   });
 });
 
+app.get("/o/logout", async (req, res) => {
+  const { id_token_hint, post_logout_redirect_uri, state } = req.query;
+
+  let redirectUrl: string | null = null;
+
+  if (typeof id_token_hint === "string") {
+    try {
+      const claims = JWT.verify(id_token_hint, PUBLIC_KEY, {
+        algorithms: ["RS256"],
+      }) as any;
+
+      const clientId = claims.aud;
+      if (typeof clientId === "string") {
+        const client = await getApprovedClient(clientId);
+        if (client && typeof post_logout_redirect_uri === "string") {
+          const allowedUris = client.redirectUri as string[];
+          if (allowedUris.includes(post_logout_redirect_uri)) {
+            const url = new URL(post_logout_redirect_uri);
+            if (typeof state === "string") {
+              url.searchParams.set("state", state);
+            }
+            redirectUrl = url.toString();
+          }
+        }
+      }
+    } catch (err) {
+      // Ignore invalid id_token_hint and just perform standard logout
+    }
+  }
+
+  const sessionId = getSessionCookie(req);
+  if (sessionId) {
+    await deleteSession(sessionId);
+  }
+
+  clearSessionCookie(res);
+
+  if (redirectUrl) {
+    res.redirect(redirectUrl);
+  } else {
+    res.redirect("/");
+  }
+});
+
 app.post("/o/logout", async (req, res) => {
   const sessionId = getSessionCookie(req);
 
