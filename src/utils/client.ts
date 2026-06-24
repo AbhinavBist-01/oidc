@@ -2,6 +2,7 @@ import { db } from "../db";
 import { clientRegistrations, clients } from "../db/schema";
 import { eq, and } from "drizzle-orm";
 import crypto from "node:crypto";
+import type { Request } from "express";
 
 export interface RegistrationData {
   id: string;
@@ -184,3 +185,35 @@ export async function getApprovedClient(clientId: string) {
 
   return client || null;
 }
+
+// Extract client credentials from Authorization header (Basic) or body parameters
+export function getClientCredentials(req: Request): {
+  clientId: string | null;
+  clientSecret: string | null;
+} {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.toLowerCase().startsWith("basic ")) {
+    try {
+      const credentialsBase64 = authHeader.slice(6).trim();
+      const credentialsDecoded = Buffer.from(credentialsBase64, "base64").toString("utf-8");
+      const colonIndex = credentialsDecoded.indexOf(":");
+      if (colonIndex !== -1) {
+        const clientId = credentialsDecoded.substring(0, colonIndex);
+        const clientSecret = credentialsDecoded.substring(colonIndex + 1);
+        return { clientId, clientSecret };
+      }
+    } catch (e) {
+      // Ignore and fall back to body parameters
+    }
+  }
+
+  // Fall back to request body parameters
+  const clientId = req.body?.client_id;
+  const clientSecret = req.body?.client_secret;
+
+  return {
+    clientId: typeof clientId === "string" ? clientId : null,
+    clientSecret: typeof clientSecret === "string" ? clientSecret : null,
+  };
+}
+

@@ -17,6 +17,8 @@ import {
   createClientRegistration,
   getPendingRegistrations,
   rejectRegistration,
+  getApprovedClient,
+  getClientCredentials,
 } from "./utils/client";
 import {
   createSession,
@@ -27,7 +29,6 @@ import {
 } from "./utils/session";
 import { clearSessionCookie, setSessionCookie } from "./utils/cookie";
 import { getSessionCookie } from "./utils/cookie";
-import { getApprovedClient } from "./utils/client";
 import {
   storeAuthorizationCode,
   getAndValidateAuthorizationCode,
@@ -521,7 +522,7 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
 });
 
 app.post("/o/token", async (req, res) => {
-  const { grant_type, code, redirect_uri, client_id, client_secret, refresh_token, code_verifier } = req.body;
+  const { grant_type, code, redirect_uri, refresh_token, code_verifier } = req.body;
 
   if (grant_type !== "authorization_code" && grant_type !== "refresh_token") {
     res.status(400).json({
@@ -531,26 +532,29 @@ app.post("/o/token", async (req, res) => {
     return;
   }
 
+  const { clientId, clientSecret } = getClientCredentials(req);
+  if (!clientId || !clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client credentials are required.",
+    });
+    return;
+  }
+
+  const client = await getApprovedClient(clientId);
+  if (!client || client.clientSecret !== clientSecret) {
+    res.status(401).json({
+      error: "invalid_client",
+      error_description: "Client authentication failed.",
+    });
+    return;
+  }
+
   if (grant_type === "authorization_code") {
-    if (
-      typeof code !== "string" ||
-      typeof redirect_uri !== "string" ||
-      typeof client_id !== "string" ||
-      typeof client_secret !== "string"
-    ) {
+    if (typeof code !== "string" || typeof redirect_uri !== "string") {
       res.status(400).json({
         error: "invalid_request",
-        error_description:
-          "code, redirect_uri, client_id, and client_secret are required.",
-      });
-      return;
-    }
-
-    const client = await getApprovedClient(client_id);
-    if (!client || client.clientSecret !== client_secret) {
-      res.status(401).json({
-        error: "invalid_client",
-        error_description: "Client authentication failed.",
+        error_description: "code and redirect_uri are required.",
       });
       return;
     }
@@ -558,7 +562,7 @@ app.post("/o/token", async (req, res) => {
     const authCode = await getAndValidateAuthorizationCode(code);
     if (
       !authCode ||
-      authCode.clientId !== client_id ||
+      authCode.clientId !== clientId ||
       authCode.redirectUri !== redirect_uri
     ) {
       res.status(400).json({
@@ -663,24 +667,10 @@ app.post("/o/token", async (req, res) => {
   }
 
   if (grant_type === "refresh_token") {
-    if (
-      typeof refresh_token !== "string" ||
-      typeof client_id !== "string" ||
-      typeof client_secret !== "string"
-    ) {
+    if (typeof refresh_token !== "string") {
       res.status(400).json({
         error: "invalid_request",
-        error_description:
-          "refresh_token, client_id, and client_secret are required.",
-      });
-      return;
-    }
-
-    const client = await getApprovedClient(client_id);
-    if (!client || client.clientSecret !== client_secret) {
-      res.status(401).json({
-        error: "invalid_client",
-        error_description: "Client authentication failed.",
+        error_description: "refresh_token is required.",
       });
       return;
     }
