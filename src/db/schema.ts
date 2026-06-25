@@ -7,7 +7,6 @@ import {
   timestamp,
   json,
 } from "drizzle-orm/pg-core";
-import { create } from "node:domain";
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -17,7 +16,7 @@ export const usersTable = pgTable("users", {
 
   profileImageURL: text("profile_image_url"),
 
-  email: varchar("email", { length: 322 }).notNull(),
+  email: varchar("email", { length: 250 }).notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(),
 
   password: varchar("password", { length: 66 }),
