@@ -59,7 +59,13 @@ async function main() {
       await runCommand('pnpm', ['run', 'db:migrate']);
       console.log('Database migrations completed successfully.\n');
     } catch (err) {
-      console.warn('⚠️ Warning: Database migration failed. If database is starting up, this is normal. Proceeding...\n');
+      console.warn('⚠️ Warning: Database migration failed. Attempting drizzle-kit push as a fallback...');
+      try {
+        await runCommand('pnpm', ['exec', 'drizzle-kit', 'push']);
+        console.log('Database schema pushed successfully.\n');
+      } catch (pushErr) {
+        console.error('❌ Error: Database schema push failed as well:', pushErr.message);
+      }
     }
 
     // 4. Run frontend and backend together

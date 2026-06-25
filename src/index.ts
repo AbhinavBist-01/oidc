@@ -39,7 +39,7 @@ const app = express();
 const PORT = process.env.PORT ?? 8000;
 
 app.use(express.json());
-app.use(express.static(path.resolve("public")));
+app.use(express.static(path.resolve("build")));
 app.use(cookieParser());
 
 // Custom CORS Middleware
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 app.get("/health", (req, res) => {
   res.json({
@@ -102,19 +102,19 @@ app.get("/.well-known/jwks.json", async (req, res) => {
 
 // Authentication Endpoints
 app.get("/o/authenticate", (req, res) => {
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 
 app.get("/o/sign-up", (req, res) => {
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 
 app.get("/clients/register", requireSession, (req, res) => {
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 
 app.get("/admin/dashboard", requireSession, isAdmin, (req, res) => {
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 
 app.post("/o/authenticate/sign-in", async (req, res) => {
@@ -536,7 +536,7 @@ app.get("/o/authorize/consent", requireSession, async (req, res) => {
     );
   }
 
-  res.sendFile(path.resolve("public", "index.html"));
+  res.sendFile(path.resolve("build", "index.html"));
 });
 
 app.post("/o/authorize/decision", requireSession, async (req, res) => {

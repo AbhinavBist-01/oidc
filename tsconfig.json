@@ -40,5 +40,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "frontend", "public", "dist"]
+  "exclude": ["node_modules", "frontend", "public", "build", "dist"]
 }
