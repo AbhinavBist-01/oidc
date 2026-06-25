@@ -1012,6 +1012,6 @@ app.get("/o/session/me", requireSession, async (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(Number(PORT), "0.0.0.0", () => {
   console.log(`AuthServer is running on PORT ${PORT}`);
 });
