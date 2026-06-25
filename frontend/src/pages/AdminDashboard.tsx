@@ -106,10 +106,12 @@ export const AdminDashboard: React.FC = () => {
   if (!user?.isAdmin) {
     return (
       <div className="container" style={{ maxWidth: "500px", textAlign: "center" }}>
-        <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", alignItems: "center", border: "1px solid var(--border)" }}>
-          <ShieldCheck size={40} style={{ color: "var(--danger)" }} />
-          <h2 style={{ border: "none", margin: 0, padding: 0 }}>Access Denied</h2>
-          <p style={{ fontSize: "0.95rem" }}>You must be an administrator to access the registration approvals dashboard.</p>
+        <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", alignItems: "center" }}>
+          <ShieldCheck size={44} style={{ color: "var(--muted)" }} />
+          <div>
+            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.3rem" }}>Access Denied</h2>
+            <p style={{ fontSize: "0.88rem", marginTop: "6px" }}>You must be an administrator to access the registration approvals dashboard.</p>
+          </div>
         </div>
       </div>
     );
@@ -117,123 +119,135 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="container" style={{ maxWidth: "850px" }}>
-      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "1px solid var(--border)" }}>
+      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
           <div>
-            <h2 style={{ border: "none", margin: 0, padding: 0 }}>Admin Approval Queue</h2>
-            <p style={{ fontSize: "0.8rem", marginTop: "4px", color: "var(--muted)" }}>Approve or reject pending client application credentials.</p>
+            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.5rem" }}>Admin Approval Queue</h2>
+            <p style={{ fontSize: "0.88rem", marginTop: "4px", color: "var(--muted)" }}>Approve or reject pending client application credentials.</p>
           </div>
-          <button onClick={loadPending} className="btn" disabled={loading} style={{ height: "2.2rem", padding: "0 14px" }}>
-            <RefreshCw size={12} className={loading ? "spin-anim" : ""} />
+          <button onClick={loadPending} className="btn btn-secondary" disabled={loading} style={{ height: "2.3rem", padding: "0 14px", gap: "6px" }}>
+            <RefreshCw size={14} className={loading ? "spin-anim" : ""} />
             Refresh
           </button>
         </div>
 
         {error && (
-          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <AlertCircle size={15} />
+          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+            <AlertCircle size={16} />
             <span>{error}</span>
           </div>
         )}
 
         {msg && (
-          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px var(--space-md)", margin: 0 }}>
-            <ShieldCheck size={15} />
+          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+            <ShieldCheck size={16} />
             <span>{msg}</span>
           </div>
         )}
 
         {loading && registrations.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-            <RefreshCw size={20} className="spin-anim" />
-            <span style={{ fontSize: "0.85rem" }}>Loading pending applications...</span>
+          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+            <RefreshCw size={22} className="spin-anim" style={{ color: "var(--accent)" }} />
+            <span style={{ fontSize: "0.88rem" }}>Loading pending applications...</span>
           </div>
         ) : registrations.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", fontSize: "0.85rem" }}>
+          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", fontSize: "0.88rem", border: "1px dashed var(--border)", borderRadius: "var(--radius-md)", background: "rgba(255,255,255,0.01)" }}>
             No pending client registrations.
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {registrations.map((r) => {
               const clientCreds = creds[r.id];
               return (
-                <div key={r.id} className="glass-panel" style={{ background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "10px" }}>
+                <div key={r.id} className="glass-panel" style={{ background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "12px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", flexWrap: "wrap" }}>
                     <div>
-                      <strong style={{ fontSize: "1rem", color: "#ffffff" }}>{r.clientName}</strong>
-                      <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginTop: "2px" }}>
-                        Application ID: <code style={{ color: "#ffffff" }}>{r.id}</code>
+                      <strong style={{ fontSize: "1.1rem", color: "var(--fg-white)" }}>{r.clientName}</strong>
+                      <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "3px" }}>
+                        Application ID: <code style={{ color: "var(--fg-white)", background: "var(--bg-darkest)", padding: "2px 6px", borderRadius: "3px", border: "1px solid var(--border)" }}>{r.id}</code>
                       </div>
                     </div>
 
                     {!clientCreds && (
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <button onClick={() => handleReject(r.id)} className="btn btn-secondary" style={{ height: "2rem", padding: "0 10px", fontSize: "0.8rem", color: "var(--danger)" }}>
-                          <X size={12} /> Reject
+                        <button onClick={() => handleReject(r.id)} className="btn btn-secondary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.82rem" }}>
+                          <X size={14} /> Reject
                         </button>
-                        <button onClick={() => handleApprove(r.id)} className="btn btn-primary" style={{ height: "2rem", padding: "0 10px", fontSize: "0.8rem" }}>
-                          <Check size={12} /> Approve
+                        <button onClick={() => handleApprove(r.id)} className="btn btn-primary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.82rem" }}>
+                          <Check size={14} /> Approve
                         </button>
                       </div>
                     )}
                   </div>
 
-                  <div style={{ fontSize: "0.8rem", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <div style={{ fontSize: "0.88rem", display: "flex", flexDirection: "column", gap: "6px", background: "var(--bg-darkest)", padding: "10px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
                     <div>
-                      <span style={{ color: "var(--muted)" }}>Redirect URIs:</span>{" "}
-                      <code style={{ background: "rgba(255,255,255,0.02)", padding: "2px 6px", borderRadius: "3px", fontSize: "0.72rem", color: "#ffffff" }}>
+                      <span style={{ color: "var(--muted)", fontWeight: 500 }}>Redirect URIs:</span>{" "}
+                      <code style={{ background: "rgba(255,255,255,0.01)", padding: "3px 6px", borderRadius: "3px", fontSize: "0.78rem", color: "var(--fg-white)" }}>
                         {JSON.stringify(r.redirectUris)}
                       </code>
                     </div>
                     <div>
-                      <span style={{ color: "var(--muted)" }}>Description:</span>{" "}
-                      <span style={{ color: "#ffffff" }}>{r.description || "No description provided."}</span>
+                      <span style={{ color: "var(--muted)", fontWeight: 500 }}>Description:</span>{" "}
+                      <span style={{ color: "var(--fg)", opacity: 0.9 }}>{r.description || "No description provided."}</span>
                     </div>
                   </div>
 
                   {clientCreds && (
-                    <div style={{ background: "var(--bg)", border: "1px dashed var(--border-hover)", borderRadius: "var(--radius-md)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "8px", marginTop: "2px" }}>
-                      <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#ffffff", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.03em" }}>
-                        <Terminal size={12} /> Generated Credentials
+                    <div style={{ 
+                      background: "var(--bg-darkest)", 
+                      border: "1px dashed var(--border-hover)", 
+                      borderRadius: "var(--radius-md)", 
+                      padding: "var(--space-md)", 
+                      display: "flex", 
+                      flexDirection: "column", 
+                      gap: "10px", 
+                      marginTop: "4px" 
+                    }}>
+                      <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--fg-white)", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        <Terminal size={14} /> Generated Credentials
                       </span>
                       
-                      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                          <span style={{ fontSize: "0.7rem", color: "var(--muted)" }}>Client ID:</span>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                          <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Client ID:</span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "4px var(--space-sm)", borderRadius: "4px", fontSize: "0.78rem", color: "#ffffff" }}>
+                            <code style={{ flex: 1, background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
                               {clientCreds.clientId}
                             </code>
                             <button
                               onClick={() => copyToClipboard(clientCreds.clientId, "id", r.id)}
                               className="btn btn-secondary"
-                              style={{ height: "1.8rem", padding: "0 8px" }}
+                              style={{ height: "2.1rem", padding: "0 10px" }}
                             >
-                              {copiedId === r.id ? <ClipboardCheck size={12} style={{ color: "#ffffff" }} /> : <Copy size={12} />}
+                              {copiedId === r.id ? <ClipboardCheck size={14} style={{ color: "var(--fg-white)" }} /> : <Copy size={14} />}
                             </button>
                           </div>
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                          <span style={{ fontSize: "0.7rem", color: "var(--muted)" }}>Client Secret (Save now - shown only once):</span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                          <span style={{ fontSize: "0.75rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "4px" }}>
+                            <span>Client Secret:</span> 
+                            <strong style={{ color: "var(--fg-white)" }}>(Save now - shown only once)</strong>
+                          </span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "var(--bg-darkest)", border: "1px solid var(--border)", padding: "4px var(--space-sm)", borderRadius: "4px", fontSize: "0.78rem", color: "#ffffff" }}>
+                            <code style={{ flex: 1, background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
                               {clientCreds.clientSecret}
                             </code>
                             <button
                               onClick={() => copyToClipboard(clientCreds.clientSecret, "secret", r.id)}
                               className="btn btn-secondary"
-                              style={{ height: "1.8rem", padding: "0 8px" }}
+                              style={{ height: "2.1rem", padding: "0 10px" }}
                             >
-                              {copiedSecret === r.id ? <ClipboardCheck size={12} style={{ color: "#ffffff" }} /> : <Copy size={12} />}
+                              {copiedSecret === r.id ? <ClipboardCheck size={14} style={{ color: "var(--fg-white)" }} /> : <Copy size={14} />}
                             </button>
                           </div>
                         </div>
                       </div>
                       
-                      <span style={{ fontSize: "0.68rem", color: "var(--muted)" }}>
-                        * Note: The secret is stored hashed on the server. The raw cleartext is only visible here.
+                      <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontStyle: "italic", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "4px" }}>
+                        * Note: The secret is stored using a secure hashing algorithm on the server. The raw cleartext is only visible here.
                       </span>
                     </div>
                   )}

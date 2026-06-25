@@ -8,6 +8,7 @@ import { SignUp } from "./pages/SignUp";
 import { Consent } from "./pages/Consent";
 import { ClientRegister } from "./pages/ClientRegister";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { RoutesOverview } from "./pages/RoutesOverview";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({ children, adminOnly }) => {
   const { user, loading } = useAuth();
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
           <main style={{ flexGrow: 1, display: "flex", flexDirection: "column", paddingBottom: "40px" }}>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/routes" element={<RoutesOverview />} />
               <Route path="/o/authenticate" element={<Login />} />
               <Route path="/o/sign-up" element={<SignUp />} />
               <Route path="/o/authorize/consent" element={<ProtectedRoute><Consent /></ProtectedRoute>} />
@@ -51,7 +53,7 @@ export const App: React.FC = () => {
             </Routes>
           </main>
           
-          <footer style={{ borderTop: "1px solid var(--border)", padding: "16px", textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", background: "rgba(6, 6, 14, 0.4)" }}>
+          <footer style={{ borderTop: "1px solid var(--border)", padding: "16px", textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", background: "rgba(5, 5, 5, 0.4)" }}>
             <div>OIDC Provider Developer Console &copy; 2026</div>
           </footer>
         </div>

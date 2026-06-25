@@ -1,147 +1,186 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Play, PlusCircle, ShieldAlert, Check, Terminal } from "lucide-react";
+import { Play, PlusCircle, ShieldAlert, ArrowRight, Check, Shield, Cpu, Code, Eye } from "lucide-react";
 
 export const Landing: React.FC = () => {
   return (
     <div className="container" style={{ gap: "var(--space-lg)" }}>
-      {/* Hero Section */}
-      <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)", border: "1px solid var(--border)" }}>
-        <div>
-          <span className="tag">
-            OIDC / OAUTH 2.0 PROTOCOL ENGINE
-          </span>
+      
+      {/* Bento Grid */}
+      <div className="bento-grid">
+        
+        {/* Hero Card - Span 12 */}
+        <div className="bento-card span-12" style={{ gap: "var(--space-md)", background: "var(--bg-darker)" }}>
+          <div>
+            <span className="tag">
+              OIDC COMPLIANT ENGINE
+            </span>
+          </div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
+            <h1 style={{ lineHeight: 1.1, textTransform: "uppercase" }}>
+              Identity & Authorization Control Center
+            </h1>
+            <p className="lead" style={{ maxWidth: "850px", opacity: 0.9 }}>
+              A developer-focused identity engine designed to orchestrate secure user session handshakes, verify PKCE authorization challenges, and provision client developer credentials.
+            </p>
+          </div>
+          
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "12px" }}>
+            <Link to="/o/authenticate" className="btn btn-primary" style={{ textDecoration: "none" }}>
+              <Play size={14} style={{ fill: "currentColor" }} />
+              Start Sign In
+            </Link>
+            <Link to="/clients/register" className="btn btn-secondary" style={{ textDecoration: "none" }}>
+              <PlusCircle size={14} />
+              Register Client
+            </Link>
+            <Link to="/admin/dashboard" className="btn btn-secondary" style={{ textDecoration: "none" }}>
+              <ShieldAlert size={14} />
+              Admin Queue
+            </Link>
+          </div>
         </div>
-        
-        <h1 style={{ marginTop: "8px", textTransform: "uppercase", letterSpacing: "-0.03em" }}>
-          Identity & Authorization Control Center
-        </h1>
-        
-        <p className="lead" style={{ maxWidth: "800px", fontSize: "0.95rem" }}>
-          A secure, high-contrast identity provider built for developers. Manages session handshakes, OAuth PKCE flows, dynamic scope consent, and client provisioning.
-        </p>
-        
-        <div className="cta" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "8px" }}>
-          <Link to="/o/authenticate" className="btn btn-primary">
-            <Play size={14} />
-            Start Sign In
-          </Link>
-          <Link to="/clients/register" className="btn btn-secondary">
-            <PlusCircle size={14} />
-            Register Client
-          </Link>
-          <Link to="/admin/dashboard" className="btn">
-            <ShieldAlert size={14} />
-            Open Admin Queue
-          </Link>
-        </div>
-      </section>
 
-      {/* 2-Column Info Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-lg)" }}>
-        
-        {/* Capabilities */}
-        <article className="glass-panel">
-          <h2>Capabilities</h2>
+        {/* Specifications - Span 6 */}
+        <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
+          <div>
+            <h3>
+              <Cpu size={14} style={{ marginRight: "6px", verticalAlign: "middle" }} />
+              Specifications
+            </h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: "12px" }}>
+              Core identity standards implemented in the backend provider engine.
+            </p>
+          </div>
+          
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {[
-              { label: "Identity Service", value: "Sessions, Login, Signup" },
-              { label: "Authorization", value: "/o/authorize (PKCE + state + nonce)" },
-              { label: "Token Service", value: "/o/token (SHA-256 Secret Hashing)" },
-              { label: "Claims API", value: "/o/userinfo (JWT claims resolution)" },
-              { label: "Metadata", value: "Discovery & JWKS Signing" },
-              { label: "Client Lifecycle", value: "Self-registration & Approval queue" }
+              { label: "Identity Service", desc: "User session creation, sign-in interfaces, and registration endpoints." },
+              { label: "Authorization Grant", desc: "Authorization code grant flow supporting state, nonce, and PKCE parameters." },
+              { label: "Token Service", desc: "RS256 token endpoint issuing signed Access and identity ID tokens." },
+              { label: "Userinfo Claims", desc: "Access-token validated endpoint returning profile and email claims." },
+              { label: "JWKS Discovery", desc: "Public metadata endpoints serving signing keys for signature verification." }
             ].map((item, idx) => (
-              <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", borderBottom: "1px solid #161616", paddingBottom: "8px" }}>
-                <span style={{ color: "var(--muted)" }}>{item.label}:</span>
-                <span style={{ color: "#ffffff", fontWeight: 500 }}>{item.value}</span>
+              <div key={idx} style={{ borderBottom: "1px solid var(--border)", paddingBottom: "10px" }}>
+                <strong style={{ color: "var(--fg-white)", fontSize: "0.88rem", display: "block" }}>{item.label}</strong>
+                <span style={{ color: "var(--muted)", fontSize: "0.8rem", display: "block", marginTop: "2px" }}>{item.desc}</span>
               </div>
             ))}
           </div>
-        </article>
+        </div>
 
-        {/* Engine Security & Verification */}
-        <article className="glass-panel">
-          <h2>Security Specs</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        {/* Security Controls - Span 6 */}
+        <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
+          <div>
+            <h3>
+              <Shield size={14} style={{ marginRight: "6px", verticalAlign: "middle" }} />
+              Security Controls
+            </h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: "12px" }}>
+              Cryptographic and session protection features enforced at rest and in transit.
+            </p>
+          </div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {[
-              { label: "PKCE Protection", desc: "SHA-256 code challenge verification" },
-              { label: "Client Hashing", desc: "SHA-256 client credentials at rest" },
-              { label: "Silent Auth", desc: "OIDC prompt=none silent check" },
-              { label: "Signing Keys", desc: "Asymmetric RS256 token signing" },
-              { label: "Rate Limiting", desc: "Subtle requests throttling" },
-              { label: "Audit logs", desc: "Registration activity tracing" }
+              { label: "PKCE Verification", desc: "Mandatory S256/plain code challenge matching protects against intercept attacks." },
+              { label: "Credential Hashing", desc: "Secure password salting and SHA-256 password hashing in database." },
+              { label: "Asymmetric Token Keys", desc: "Token signature operations signed via local private PEM certificates." },
+              { label: "Consent Guard", desc: "Verifies scopes and redirects user to approve permissions before code emission." },
+              { label: "Session Lifecycles", desc: "Secure HTTP-only cookies protect active session tokens against script access." }
             ].map((item, idx) => (
-              <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.85rem" }}>
-                <Check size={14} style={{ color: "var(--fg-white)", marginTop: "3px", flexShrink: 0 }} />
+              <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                <div style={{ 
+                  marginTop: "3px", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
+                  width: "16px", 
+                  height: "16px", 
+                  border: "1px solid var(--border)",
+                  color: "var(--fg-white)",
+                  flexShrink: 0
+                }}>
+                  <Check size={11} />
+                </div>
                 <div>
-                  <strong style={{ color: "#ffffff", display: "block" }}>{item.label}</strong>
-                  <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>{item.desc}</span>
+                  <strong style={{ color: "var(--fg-white)", fontSize: "0.88rem" }}>{item.label}</strong>
+                  <span style={{ color: "var(--muted)", fontSize: "0.8rem", display: "block", marginTop: "2px" }}>{item.desc}</span>
                 </div>
               </div>
             ))}
           </div>
-        </article>
-      </div>
-
-      {/* Handshake Flow */}
-      <section className="glass-panel">
-        <h2>Handshake Flow</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "12px" }}>
-          {[
-            { step: "01", title: "Redirect to Auth", desc: "Client redirects browser to /o/authorize." },
-            { step: "02", title: "User Check", desc: "OIDC Server validates session cookie." },
-            { step: "03", title: "User Consent", desc: "User grants scopes on consent screen." },
-            { step: "04", title: "Callback Code", desc: "Server redirects to callback with one-time code." },
-            { step: "05", title: "Token Exchange", desc: "Client exchanges code for Access & ID tokens." },
-            { step: "06", title: "Claims Request", desc: "Client requests profile info from /o/userinfo." }
-          ].map((item, idx) => (
-            <div key={idx} style={{ border: "1px solid var(--border)", background: "var(--bg-darkest)", borderRadius: "var(--radius-md)", padding: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--muted)" }}>STEP {item.step}</span>
-                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--muted-dark)" }} />
-              </div>
-              <strong style={{ color: "#ffffff", fontSize: "0.85rem" }}>{item.title}</strong>
-              <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--muted)", lineHeight: 1.4 }}>{item.desc}</p>
-            </div>
-          ))}
         </div>
-      </section>
 
-      {/* Core Endpoint Consoles */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-lg)" }}>
-        <article className="glass-panel">
-          <h2 style={{ border: "none", margin: 0, paddingBottom: "10px", display: "flex", alignItems: "center", gap: "8px", fontSize: "0.95rem" }}>
-            <Terminal size={14} /> OIDC Endpoints
-          </h2>
-          <pre className="code-block" style={{ margin: 0, fontSize: "0.78rem" }}>
-{`GET  /.well-known/openid-configuration
-GET  /.well-known/jwks.json
-GET  /o/authenticate
-POST /o/authenticate/sign-in
-POST /o/authenticate/sign-up
-GET  /o/authorize
-GET  /o/authorize/consent
-POST /o/authorize/decision
-POST /o/token
-GET  /o/userinfo
-POST /o/logout`}
-          </pre>
-        </article>
+        {/* Handshake Flow - Span 12 */}
+        <div className="bento-card span-12" style={{ gap: "var(--space-md)" }}>
+          <div>
+            <h3>Protocol Handshake Timeline</h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+              Step-by-step transaction lifecycle for authorization code PKCE flow.
+            </p>
+          </div>
 
-        <article className="glass-panel">
-          <h2 style={{ border: "none", margin: 0, paddingBottom: "10px", display: "flex", alignItems: "center", gap: "8px", fontSize: "0.95rem" }}>
-            <Terminal size={14} /> Developer Endpoints
-          </h2>
-          <pre className="code-block" style={{ margin: 0, fontSize: "0.78rem" }}>
-{`GET  /clients/register
-POST /clients/register
-GET  /admin/dashboard
-GET  /admin/registrations
-POST /admin/registrations/:id/approve
-POST /admin/registrations/:id/reject`}
-          </pre>
-        </article>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px", marginTop: "8px" }}>
+            {[
+              { step: "01", title: "Authorization Request", desc: "Client redirects user to /o/authorize with code challenge and scope." },
+              { step: "02", title: "User Authentication", desc: "Engine verifies user credentials and active session state." },
+              { step: "03", title: "Scope Consent", desc: "User grants explicit consent for scopes on verify screen." },
+              { step: "04", title: "Authorization Code", desc: "One-time code returned via approved redirect callback URI." },
+              { step: "05", title: "Token Exchange", desc: "Client exchanges code and verifier secret for signed tokens." },
+              { step: "06", title: "Resource Access", desc: "Client queries /o/userinfo to decode claims and profiles." }
+            ].map((item, idx) => (
+              <div key={idx} className="handshake-step-card" style={{ background: "var(--bg-darkest)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--muted)", fontWeight: 600 }}>PHASE {item.step}</span>
+                  <ArrowRight size={12} style={{ color: "var(--border-hover)" }} />
+                </div>
+                <strong style={{ color: "var(--fg-white)", fontSize: "0.88rem", marginTop: "4px" }}>{item.title}</strong>
+                <p style={{ margin: 0, fontSize: "0.78rem", color: "var(--fg)", opacity: 0.8, lineHeight: 1.4 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dedicated Routes Documentation Banner - Span 12 */}
+        <div className="bento-card span-12" style={{ 
+          background: "var(--bg-darker)", 
+          display: "flex", 
+          flexDirection: "row", 
+          alignItems: "center", 
+          justifyContent: "space-between", 
+          flexWrap: "wrap",
+          gap: "var(--space-md)" 
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div style={{ 
+              width: "42px", 
+              height: "42px", 
+              border: "1px solid var(--border)", 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center",
+              borderRadius: "var(--radius-md)",
+              background: "var(--bg-darkest)",
+              color: "var(--fg-white)"
+            }}>
+              <Code size={20} />
+            </div>
+            <div>
+              <strong style={{ color: "var(--fg-white)", fontSize: "1rem", display: "block" }}>Developer & Client Routes Console</strong>
+              <p style={{ fontSize: "0.82rem", color: "var(--fg)", opacity: 0.8, marginTop: "2px" }}>
+                Browse full HTTP method signatures, parameters, request body schemas, and role scopes for client registration and auth APIs.
+              </p>
+            </div>
+          </div>
+          
+          <Link to="/routes" className="btn btn-secondary" style={{ textDecoration: "none", gap: "6px" }}>
+            <Eye size={14} />
+            <span>Explore API Spec</span>
+          </Link>
+        </div>
+
       </div>
     </div>
   );

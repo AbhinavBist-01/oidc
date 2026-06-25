@@ -113,7 +113,7 @@ app.get("/clients/register", requireSession, (req, res) => {
   res.sendFile(path.resolve("build", "index.html"));
 });
 
-app.get("/admin/dashboard", requireSession, isAdmin, (req, res) => {
+app.get("/admin/dashboard", requireSession, (req, res) => {
   res.sendFile(path.resolve("build", "index.html"));
 });
 
