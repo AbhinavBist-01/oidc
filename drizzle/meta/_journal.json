@@ -36,6 +36,13 @@
       "when": 1782330012337,
       "tag": "0004_ordinary_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782382942018,
+      "tag": "0005_orange_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }
