@@ -3,15 +3,15 @@ import { Shield, HelpCircle, AppWindow } from "lucide-react";
 
 export const RoutesOverview: React.FC = () => {
   return (
-    <div className="container" style={{ gap: "var(--space-lg)" }}>
+    <div className="container" style={{ gap: "48px", padding: "64px 24px" }}>
       
       {/* Header Info */}
-      <section style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
+      <section style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <div>
           <span className="tag">API SPECIFICATION</span>
         </div>
-        <h1 style={{ lineHeight: 1.15 }}>Developer & Client Routes</h1>
-        <p className="lead" style={{ maxWidth: "800px", color: "var(--fg)" }}>
+        <h1 style={{ fontSize: "clamp(2rem, 5vw, 2.8rem)", fontWeight: 800 }}>Developer & Client Routes</h1>
+        <p className="lead" style={{ maxWidth: "800px", color: "var(--fg)", fontSize: "1.02rem" }}>
           Documentation of the active provider endpoints, request models, response formats, and security policies.
         </p>
       </section>
@@ -20,13 +20,13 @@ export const RoutesOverview: React.FC = () => {
       <div className="bento-grid">
         
         {/* OIDC Core Protocols - Span 12 */}
-        <div className="bento-card span-12" style={{ gap: "var(--space-md)", background: "rgba(10, 10, 15, 0.45)" }}>
+        <div className="bento-card span-12" style={{ gap: "24px" }}>
           <div>
             <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
-              <HelpCircle size={16} style={{ color: "var(--accent)" }} /> 
+              <HelpCircle size={16} /> 
               <span>OIDC Core Endpoints</span>
             </h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginTop: "4px" }}>
               Standard OIDC/OAuth 2.0 discovery and token exchange endpoints.
             </p>
           </div>
@@ -48,14 +48,14 @@ export const RoutesOverview: React.FC = () => {
                   <td><code>/.well-known/openid-configuration</code></td>
                   <td style={{ color: "var(--muted)", fontStyle: "italic" }}>None</td>
                   <td>OIDC metadata JSON configuration object</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/.well-known/jwks.json</code></td>
                   <td style={{ color: "var(--muted)", fontStyle: "italic" }}>None</td>
                   <td>Array of JSON Web Keys used to sign tokens</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
@@ -72,13 +72,13 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>Redirects to Consent page or returns auth code</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--accent)", background: "rgba(0, 240, 255, 0.05)", padding: "3px 6px", borderRadius: "3px", border: "1px solid rgba(0, 240, 255, 0.1)" }}>Session Cookie</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Session Cookie</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
                   <td><code>/o/token</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(5, 5, 8, 0.4)", padding: "6px", borderRadius: "4px", border: "1px solid var(--glass-border)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(255,255,255,0.01)", padding: "8px", borderRadius: "4px", border: "1px solid var(--border)" }}>
                       <strong>Body (JSON):</strong><br />
                       {`{`}<br />
                       &nbsp;&nbsp;grant_type: "authorization_code",<br />
@@ -89,7 +89,7 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(5, 5, 8, 0.4)", padding: "6px", borderRadius: "4px", border: "1px solid var(--glass-border)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(255,255,255,0.01)", padding: "8px", borderRadius: "4px", border: "1px solid var(--border)" }}>
                       {`{`}<br />
                       &nbsp;&nbsp;access_token: "[jwt]",<br />
                       &nbsp;&nbsp;id_token: "[jwt]",<br />
@@ -100,15 +100,15 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255, 255, 255, 0.03)", padding: "3px 6px", borderRadius: "3px" }}>Basic / POST</span>
+                    <span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>POST Credentials</span>
                   </td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/o/userinfo</code></td>
-                  <td style={{ color: "var(--muted)" }}>Authorization: Bearer [access_token]</td>
+                  <td style={{ color: "var(--muted)", fontStyle: "italic" }}>Authorization: Bearer [access_token]</td>
                   <td>JSON object containing verified user claims based on approved scopes</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--accent)", background: "rgba(0, 240, 255, 0.05)", padding: "3px 6px", borderRadius: "3px", border: "1px solid rgba(0, 240, 255, 0.1)" }}>Bearer Token</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Bearer Token</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
@@ -119,7 +119,7 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td style={{ color: "var(--muted)", fontStyle: "italic" }}>Empty (HTTP 200)</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Credentials</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Credentials</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
@@ -134,7 +134,7 @@ export const RoutesOverview: React.FC = () => {
                       {`{ active: true, sub: "[userId]", ... }`}
                     </div>
                   </td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Credentials</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Credentials</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
@@ -146,7 +146,7 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>Clears session and redirects to post logout redirect URI or root</td>
-                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
                 </tr>
               </tbody>
             </table>
@@ -154,20 +154,20 @@ export const RoutesOverview: React.FC = () => {
         </div>
 
         {/* Developer Client Lifecycle - Span 6 */}
-        <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
+        <div className="bento-card span-6" style={{ gap: "24px" }}>
           <div>
             <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
-              <AppWindow size={16} style={{ color: "var(--accent)" }} /> 
+              <AppWindow size={16} /> 
               <span>Developer Client Management</span>
             </h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginTop: "4px" }}>
               Endpoints for self-registering client application details.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                 <span className="method-tag">GET</span>
                 <code style={{ color: "var(--fg-white)" }}>/clients/register</code>
               </div>
@@ -177,15 +177,15 @@ export const RoutesOverview: React.FC = () => {
             </div>
             
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                 <span className="method-tag">POST</span>
                 <code style={{ color: "var(--fg-white)" }}>/clients/register</code>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.8rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "0.8rem" }}>
                 <p style={{ color: "var(--fg)", opacity: 0.85 }}>
                   Submits a registration request for admin review.
                 </p>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", background: "rgba(5, 5, 8, 0.5)", padding: "8px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--glass-border)", lineHeight: 1.45 }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", background: "rgba(255,255,255,0.01)", padding: "10px 14px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)", lineHeight: 1.45 }}>
                   <strong>Body Schema:</strong><br />
                   {`{`}<br />
                   &nbsp;&nbsp;clientName: "[app_name]",<br />
@@ -199,20 +199,20 @@ export const RoutesOverview: React.FC = () => {
         </div>
 
         {/* Administrator Dashboards - Span 6 */}
-        <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
+        <div className="bento-card span-6" style={{ gap: "24px" }}>
           <div>
             <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
-              <Shield size={16} style={{ color: "var(--accent)" }} /> 
+              <Shield size={16} /> 
               <span>Admin Approval Queues</span>
             </h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+            <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginTop: "4px" }}>
               Endpoints restricted to administrative roles for reviewing clients.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                 <span className="method-tag">GET</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations</code>
               </div>
@@ -221,8 +221,8 @@ export const RoutesOverview: React.FC = () => {
               </p>
             </div>
 
-            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                 <span className="method-tag">POST</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations/:id/approve</code>
               </div>
@@ -232,7 +232,7 @@ export const RoutesOverview: React.FC = () => {
             </div>
 
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                 <span className="method-tag">POST</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations/:id/reject</code>
               </div>
