@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "../context/AuthContext";
-import { KeyRound, Lock, Mail, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import { Loader2, AlertCircle, ArrowRight } from "lucide-react";
 
 export const Login: React.FC = () => {
   const { user, fetchUser, logout } = useAuth();
@@ -60,30 +60,16 @@ export const Login: React.FC = () => {
 
   if (user) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
-        <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", textAlign: "center", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-          <div style={{ 
-            width: "52px", 
-            height: "52px", 
-            borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--glass-border)", 
-            background: "rgba(0, 240, 255, 0.04)", 
-            display: "inline-flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            margin: "0 auto", 
-            color: "var(--accent)" 
-          }}>
-            <KeyRound size={24} />
-          </div>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
+        <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", textAlign: "center", display: "flex", flexDirection: "column", gap: "24px" }}>
           <div>
-            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Already Signed In</h2>
-            <p style={{ fontSize: "0.88rem", marginTop: "8px", color: "var(--fg)" }}>
+            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.3rem", fontWeight: 700 }}>Already Signed In</h2>
+            <p style={{ fontSize: "0.85rem", marginTop: "8px", color: "var(--fg)" }}>
               You are authenticated as <strong style={{ color: "var(--fg-white)" }}>{user.email}</strong>.
             </p>
           </div>
           
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {redirectUri && (
               <a href={redirectUri} className="btn btn-primary" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
                 <span>Return to Client App</span>
@@ -103,25 +89,11 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "24px" }}>
         
         <div style={{ textAlign: "center" }}>
-          <div style={{ 
-            width: "52px", 
-            height: "52px", 
-            borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--glass-border)", 
-            background: "rgba(0, 240, 255, 0.04)", 
-            display: "inline-flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            marginBottom: "12px", 
-            color: "var(--accent)" 
-          }}>
-            <Lock size={22} />
-          </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Account Sign In</h2>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Account Sign In</h2>
           <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your OIDC credentials to authenticate</p>
         </div>
 
@@ -135,48 +107,40 @@ export const Login: React.FC = () => {
 
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <div style={{ position: "relative" }}>
-              <Mail size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-              <input
-                id="email"
-                type="email"
-                className="input-control"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: "42px" }}
-                required
-              />
-            </div>
+            <input
+              id="email"
+              type="email"
+              className="input-control"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
 
           <div className="form-group" style={{ marginBottom: "24px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <label htmlFor="password">Password</label>
-              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.78rem", color: "var(--muted)", borderBottom: "none" }}>
+              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.75rem", color: "var(--muted)", borderBottom: "none" }}>
                 Forgot password?
               </a>
             </div>
-            <div style={{ position: "relative" }}>
-              <Lock size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-              <input
-                id="password"
-                type="password"
-                className="input-control"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingLeft: "42px" }}
-                required
-              />
-            </div>
+            <input
+              id="password"
+              type="password"
+              className="input-control"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: "100%", marginTop: "4px" }} disabled={loading}>
+          <button type="submit" className="btn btn-primary" style={{ width: "100%" }} disabled={loading}>
             {loading ? (
               <>
                 <Loader2 size={16} className="spin-anim" />
-                <span>Authenticating...</span>
+                <span>Authenticating…</span>
               </>
             ) : (
               <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -187,16 +151,16 @@ export const Login: React.FC = () => {
           </button>
         </form>
 
-        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "12px" }}>
           <span>
-            Don't have an developer account?{" "}
-            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", borderBottom: "none" }}>
+            Don't have a developer account?{" "}
+            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)", borderBottom: "none" }}>
               Sign up
             </a>
           </span>
-          <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: "14px", marginTop: "8px", display: "flex", justifyContent: "center", gap: "16px" }}>
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "16px", marginTop: "4px", display: "flex", justifyContent: "center", gap: "16px" }}>
             <Link to="/clients/register" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Register Client</Link>
-            <span style={{ color: "var(--glass-border)" }}>|</span>
+            <span style={{ color: "var(--border)" }}>|</span>
             <Link to="/admin/dashboard" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Admin Console</Link>
           </div>
         </div>

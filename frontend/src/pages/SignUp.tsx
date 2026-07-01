@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UserPlus, Lock, Mail, User, Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 
 export const SignUp: React.FC = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -67,12 +67,12 @@ export const SignUp: React.FC = () => {
       if (!res.ok) {
         setError(data.message || "Registration failed. Please try again.");
       } else if (data.redirect) {
-        setSuccess("Account created! Redirecting...");
+        setSuccess("Account created! Redirecting…");
         setTimeout(() => {
           window.location.href = data.redirect;
         }, 1000);
       } else {
-        setSuccess("Account created successfully! Redirecting to sign in...");
+        setSuccess("Account created successfully! Redirecting to sign in…");
         setTimeout(() => {
           window.location.href = `/o/authenticate?${searchParams.toString()}`;
         }, 1500);
@@ -86,25 +86,11 @@ export const SignUp: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "440px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "24px" }}>
         
         <div style={{ textAlign: "center" }}>
-          <div style={{ 
-            width: "52px", 
-            height: "52px", 
-            borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--glass-border)", 
-            background: "rgba(0, 240, 255, 0.04)", 
-            display: "inline-flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            marginBottom: "12px", 
-            color: "var(--accent)" 
-          }}>
-            <UserPlus size={22} />
-          </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Create Developer Account</h2>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Create Developer Account</h2>
           <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your registration details below</p>
         </div>
 
@@ -126,91 +112,72 @@ export const SignUp: React.FC = () => {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div className="form-group">
               <label htmlFor="firstName">First name</label>
-              <div style={{ position: "relative" }}>
-                <User size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-                <input
-                  id="firstName"
-                  type="text"
-                  className="input-control"
-                  placeholder="John"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  style={{ paddingLeft: "42px" }}
-                  required
-                />
-              </div>
+              <input
+                id="firstName"
+                type="text"
+                className="input-control"
+                placeholder="John"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
             </div>
 
             <div className="form-group">
               <label htmlFor="lastName">Last name</label>
-              <div style={{ position: "relative" }}>
-                <User size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-                <input
-                  id="lastName"
-                  type="text"
-                  className="input-control"
-                  placeholder="Doe"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  style={{ paddingLeft: "42px" }}
-                  required
-                />
-              </div>
+              <input
+                id="lastName"
+                type="text"
+                className="input-control"
+                placeholder="Doe"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
             </div>
           </div>
 
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <div style={{ position: "relative" }}>
-              <Mail size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-              <input
-                id="email"
-                type="email"
-                className="input-control"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: "42px" }}
-                required
-              />
-            </div>
+            <input
+              id="email"
+              type="email"
+              className="input-control"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
 
-          <div className="form-group" style={{ marginBottom: "14px" }}>
+          <div className="form-group" style={{ marginBottom: "12px" }}>
             <label htmlFor="password">Password</label>
-            <div style={{ position: "relative" }}>
-              <Lock size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-              <input
-                id="password"
-                type="password"
-                className="input-control"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingLeft: "42px" }}
-                required
-              />
-            </div>
-            <span style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "3px" }}>
+            <input
+              id="password"
+              type="password"
+              className="input-control"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "2px" }}>
               Must be at least 8 characters
             </span>
           </div>
 
           <div className="form-group" style={{ marginBottom: "24px" }}>
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <div style={{ position: "relative" }}>
-              <Lock size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
-              <input
-                id="confirmPassword"
-                type="password"
-                className="input-control"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ paddingLeft: "42px", borderColor: passwordMismatch ? "var(--danger)" : "" }}
-                required
-              />
-            </div>
+            <input
+              id="confirmPassword"
+              type="password"
+              className="input-control"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              style={{ borderColor: passwordMismatch ? "var(--danger)" : "" }}
+              required
+            />
             {passwordMismatch && (
               <span style={{ fontSize: "0.75rem", color: "var(--danger-text)", marginTop: "4px" }}>
                 Passwords do not match
@@ -222,7 +189,7 @@ export const SignUp: React.FC = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="spin-anim" />
-                <span>Creating Account...</span>
+                <span>Creating Account…</span>
               </>
             ) : (
               <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -239,9 +206,9 @@ export const SignUp: React.FC = () => {
           <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>.
         </p>
 
-        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--glass-border)", paddingTop: "14px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
           Already have an account?{" "}
-          <a href={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>
+          <a href={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)", textDecoration: "none" }}>
             Sign in
           </a>
         </div>
