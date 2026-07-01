@@ -68,7 +68,7 @@ export const ClientRegister: React.FC = () => {
   };
 
   return (
-    <div className="container" style={{ maxWidth: "720px" }}>
+    <div className="container" style={{ maxWidth: "740px" }}>
       <section className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
         
         <div>
@@ -79,14 +79,14 @@ export const ClientRegister: React.FC = () => {
         </div>
 
         {error && (
-          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: 0 }}>
             <AlertCircle size={16} />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: 0 }}>
             <CheckCircle size={16} />
             <span>{success}</span>
           </div>
@@ -94,22 +94,22 @@ export const ClientRegister: React.FC = () => {
 
         {result && (
           <div style={{ 
-            background: "var(--bg-darkest)", 
-            border: "1px solid var(--border)", 
+            background: "rgba(5, 5, 8, 0.7)", 
+            border: "1px solid var(--glass-border)", 
             borderRadius: "var(--radius-md)", 
             padding: "var(--space-md)", 
             display: "flex", 
             flexDirection: "column", 
             gap: "10px"
           }}>
-            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--fg-white)", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
               <Terminal size={14} /> Submission Receipt
             </span>
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.82rem", fontFamily: "var(--font-mono)", borderLeft: "2px solid var(--border-hover)", paddingLeft: "12px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.82rem", fontFamily: "var(--font-mono)", borderLeft: "2px solid var(--accent)", paddingLeft: "12px" }}>
               <div><span style={{ color: "var(--muted)" }}>Registration ID:</span> <span style={{ color: "var(--fg-white)" }}>{result.id}</span></div>
-              <div><span style={{ color: "var(--muted)" }}>Status:</span> <span style={{ color: "var(--fg-white)", fontWeight: 600 }}>{result.status}</span></div>
+              <div><span style={{ color: "var(--muted)" }}>Status:</span> <span style={{ color: "var(--accent)", fontWeight: 600 }}>{result.status}</span></div>
             </div>
-            <p style={{ fontSize: "0.78rem", color: "var(--muted)", margin: 0, borderTop: "1px solid var(--border)", paddingTop: "10px", marginTop: "4px" }}>
+            <p style={{ fontSize: "0.78rem", color: "var(--muted)", margin: 0, borderTop: "1px solid var(--glass-border)", paddingTop: "10px", marginTop: "4px" }}>
               Approve this application in the admin console to retrieve its Client ID and Secret credentials.
             </p>
           </div>
@@ -119,7 +119,7 @@ export const ClientRegister: React.FC = () => {
           <div className="form-group">
             <label htmlFor="clientName">Client Name</label>
             <div style={{ position: "relative" }}>
-              <AppWindow size={16} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
+              <AppWindow size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="clientName"
                 type="text"
@@ -136,7 +136,7 @@ export const ClientRegister: React.FC = () => {
           <div className="form-group">
             <label htmlFor="redirectUris">Redirect URIs (one per line)</label>
             <div style={{ position: "relative" }}>
-              <ListTodo size={16} style={{ position: "absolute", left: "14px", top: "16px", color: "var(--muted)" }} />
+              <ListTodo size={15} style={{ position: "absolute", left: "14px", top: "16px", color: "var(--muted)" }} />
               <textarea
                 id="redirectUris"
                 className="input-control"
@@ -152,10 +152,10 @@ export const ClientRegister: React.FC = () => {
             </span>
           </div>
 
-          <div className="form-group" style={{ marginBottom: "20px" }}>
+          <div className="form-group" style={{ marginBottom: "24px" }}>
             <label htmlFor="description">Description</label>
             <div style={{ position: "relative" }}>
-              <FileText size={16} style={{ position: "absolute", left: "14px", top: "16px", color: "var(--muted)" }} />
+              <FileText size={15} style={{ position: "absolute", left: "14px", top: "16px", color: "var(--muted)" }} />
               <textarea
                 id="description"
                 className="input-control"
@@ -171,11 +171,11 @@ export const ClientRegister: React.FC = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="spin-anim" />
-                Submitting Registration...
+                <span>Submitting Registration...</span>
               </>
             ) : (
               <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span>Submit Registration</span>
+                <span>Submit App Registration</span>
                 <ArrowRight size={14} />
               </span>
             )}
@@ -185,3 +185,5 @@ export const ClientRegister: React.FC = () => {
     </div>
   );
 };
+
+export default ClientRegister;

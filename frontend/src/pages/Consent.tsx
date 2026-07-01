@@ -51,38 +51,38 @@ export const Consent: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "20px" }}>
-      <main className="glass-panel" style={{ width: "100%", maxWidth: "500px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
+      <main className="glass-panel" style={{ width: "100%", maxWidth: "520px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
         
         <div style={{ textAlign: "center" }}>
           <div style={{ 
-            width: "48px", 
-            height: "48px", 
+            width: "52px", 
+            height: "52px", 
             borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--border)", 
-            background: "rgba(255, 255, 255, 0.02)", 
+            border: "1px solid var(--glass-border)", 
+            background: "rgba(0, 240, 255, 0.04)", 
             display: "inline-flex", 
             alignItems: "center", 
             justifyContent: "center", 
             marginBottom: "12px", 
-            color: "var(--fg-white)" 
+            color: "var(--accent)" 
           }}>
-            <ShieldCheck size={24} />
+            <ShieldCheck size={26} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.25rem" }}>Authorize Application</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px", color: "var(--muted)" }}>An external application is requesting access to your user identity</p>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Authorize Application</h2>
+          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>An external application is requesting access to your user identity</p>
         </div>
 
         {error && (
-          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: 0 }}>
             <ShieldAlert size={16} style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
 
         <section style={{ 
-          background: "var(--bg-darkest)", 
-          border: "1px solid var(--border)", 
+          background: "rgba(5, 5, 8, 0.5)", 
+          border: "1px solid var(--glass-border)", 
           borderRadius: "var(--radius-md)", 
           padding: "var(--space-md)", 
           display: "flex", 
@@ -90,38 +90,38 @@ export const Consent: React.FC = () => {
           gap: "14px" 
         }}>
           <div style={{ fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "4px" }}>
-            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.72rem", letterSpacing: "0.05em" }}>Client ID:</span>
-            <code style={{ background: "rgba(255,255,255,0.03)", padding: "6px 10px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", border: "1px solid rgba(255,255,255,0.02)", fontFamily: "var(--font-mono)", fontSize: "0.8rem" }}>{clientId}</code>
+            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.08em" }}>Client ID:</span>
+            <code style={{ background: "rgba(0, 240, 255, 0.02)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", border: "1px solid var(--glass-border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{clientId}</code>
           </div>
           <div style={{ fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "4px" }}>
-            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.72rem", letterSpacing: "0.05em" }}>Redirect URI:</span>
-            <code style={{ background: "rgba(255,255,255,0.03)", padding: "6px 10px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", overflowWrap: "anywhere", border: "1px solid rgba(255,255,255,0.02)", fontFamily: "var(--font-mono)", fontSize: "0.8rem" }}>{redirectUri}</code>
+            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.08em" }}>Redirect URI:</span>
+            <code style={{ background: "rgba(0, 240, 255, 0.02)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", overflowWrap: "anywhere", border: "1px solid var(--glass-border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{redirectUri}</code>
           </div>
           
-          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "14px", marginTop: "4px" }}>
-            <span style={{ color: "var(--muted)", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "8px" }}>Requested Access Scopes:</span>
+          <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: "14px", marginTop: "4px" }}>
+            <span style={{ color: "var(--muted)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: "10px" }}>Requested Access Scopes:</span>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {scopesList.map((item, idx) => (
                 <div key={idx} style={{ 
                   display: "flex", 
                   alignItems: "center", 
                   gap: "10px", 
-                  fontSize: "0.88rem", 
+                  fontSize: "0.85rem", 
                   color: "var(--fg-white)",
                   background: "rgba(255,255,255,0.01)",
-                  padding: "6px 10px",
+                  padding: "8px 12px",
                   borderRadius: "var(--radius-sm)",
-                  border: "1px solid rgba(255,255,255,0.02)"
+                  border: "1px solid var(--glass-border)"
                 }}>
                   <div style={{ 
                     width: "18px", 
                     height: "18px", 
-                    border: "1px solid var(--border-hover)", 
-                    background: "rgba(255, 255, 255, 0.02)", 
+                    border: "1px solid rgba(0, 240, 255, 0.3)", 
+                    background: "rgba(0, 240, 255, 0.05)", 
                     display: "flex", 
                     alignItems: "center", 
                     justifyContent: "center", 
-                    color: "var(--fg-white)", 
+                    color: "var(--accent)", 
                     borderRadius: "4px" 
                   }}>
                     <Check size={11} strokeWidth={3} />
@@ -134,8 +134,8 @@ export const Consent: React.FC = () => {
         </section>
 
         <p style={{ fontSize: "0.75rem", color: "var(--muted)", textAlign: "center", margin: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
-          <HelpCircle size={13} />
-          <span>Make sure you trust the application client details before granting access.</span>
+          <HelpCircle size={14} style={{ color: "var(--accent)" }} />
+          <span>Verify client app credentials before authorizing.</span>
         </p>
 
         <div className="actions" style={{ display: "flex", gap: "12px", marginTop: "4px" }}>
@@ -160,3 +160,5 @@ export const Consent: React.FC = () => {
     </div>
   );
 };
+
+export default Consent;

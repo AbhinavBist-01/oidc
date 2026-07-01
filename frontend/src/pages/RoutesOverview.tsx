@@ -10,8 +10,8 @@ export const RoutesOverview: React.FC = () => {
         <div>
           <span className="tag">API SPECIFICATION</span>
         </div>
-        <h1 style={{ textTransform: "uppercase" }}>Developer & Client Routes</h1>
-        <p className="lead" style={{ maxWidth: "800px" }}>
+        <h1 style={{ lineHeight: 1.15 }}>Developer & Client Routes</h1>
+        <p className="lead" style={{ maxWidth: "800px", color: "var(--fg)" }}>
           Documentation of the active provider endpoints, request models, response formats, and security policies.
         </p>
       </section>
@@ -20,10 +20,11 @@ export const RoutesOverview: React.FC = () => {
       <div className="bento-grid">
         
         {/* OIDC Core Protocols - Span 12 */}
-        <div className="bento-card span-12" style={{ gap: "var(--space-md)" }}>
+        <div className="bento-card span-12" style={{ gap: "var(--space-md)", background: "rgba(10, 10, 15, 0.45)" }}>
           <div>
-            <h3 style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <HelpCircle size={16} /> OIDC Core Endpoints
+            <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
+              <HelpCircle size={16} style={{ color: "var(--accent)" }} /> 
+              <span>OIDC Core Endpoints</span>
             </h3>
             <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
               Standard OIDC/OAuth 2.0 discovery and token exchange endpoints.
@@ -45,22 +46,22 @@ export const RoutesOverview: React.FC = () => {
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/.well-known/openid-configuration</code></td>
-                  <td style={{ color: "var(--muted)" }}>None</td>
+                  <td style={{ color: "var(--muted)", fontStyle: "italic" }}>None</td>
                   <td>OIDC metadata JSON configuration object</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/.well-known/jwks.json</code></td>
-                  <td style={{ color: "var(--muted)" }}>None</td>
+                  <td style={{ color: "var(--muted)", fontStyle: "italic" }}>None</td>
                   <td>Array of JSON Web Keys used to sign tokens</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/o/authorize</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45 }}>
                       ?response_type=code<br />
                       &client_id=[uuid]<br />
                       &redirect_uri=[url]<br />
@@ -71,24 +72,24 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>Redirects to Consent page or returns auth code</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Session Cookie</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--accent)", background: "rgba(0, 240, 255, 0.05)", padding: "3px 6px", borderRadius: "3px", border: "1px solid rgba(0, 240, 255, 0.1)" }}>Session Cookie</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
                   <td><code>/o/token</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
-                      Body (JSON):<br />
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(5, 5, 8, 0.4)", padding: "6px", borderRadius: "4px", border: "1px solid var(--glass-border)" }}>
+                      <strong>Body (JSON):</strong><br />
                       {`{`}<br />
                       &nbsp;&nbsp;grant_type: "authorization_code",<br />
                       &nbsp;&nbsp;code: "[auth_code]",<br />
-                      &nbsp;&nbsp;redirect_uri: "[callback_url]",<br />
-                      &nbsp;&nbsp;code_verifier: "[raw_verifier_secret]"<br />
+                      &nbsp;&nbsp;redirect_uri: "[callback]",<br />
+                      &nbsp;&nbsp;code_verifier: "[verifier]"<br />
                       {`}`}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45, background: "rgba(5, 5, 8, 0.4)", padding: "6px", borderRadius: "4px", border: "1px solid var(--glass-border)" }}>
                       {`{`}<br />
                       &nbsp;&nbsp;access_token: "[jwt]",<br />
                       &nbsp;&nbsp;id_token: "[jwt]",<br />
@@ -99,7 +100,7 @@ export const RoutesOverview: React.FC = () => {
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Basic Auth / POST Credentials</span>
+                    <span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255, 255, 255, 0.03)", padding: "3px 6px", borderRadius: "3px" }}>Basic / POST</span>
                   </td>
                 </tr>
                 <tr>
@@ -107,45 +108,45 @@ export const RoutesOverview: React.FC = () => {
                   <td><code>/o/userinfo</code></td>
                   <td style={{ color: "var(--muted)" }}>Authorization: Bearer [access_token]</td>
                   <td>JSON object containing verified user claims based on approved scopes</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Bearer Token</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--accent)", background: "rgba(0, 240, 255, 0.05)", padding: "3px 6px", borderRadius: "3px", border: "1px solid rgba(0, 240, 255, 0.1)" }}>Bearer Token</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
                   <td><code>/o/revoke</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)" }}>
                       Body: {`{ token: "[refresh_token]" }`}
                     </div>
                   </td>
-                  <td style={{ color: "var(--muted)" }}>Empty (HTTP 200)</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Client Credentials</span></td>
+                  <td style={{ color: "var(--muted)", fontStyle: "italic" }}>Empty (HTTP 200)</td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Credentials</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">POST</span></td>
                   <td><code>/o/introspect</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)" }}>
                       Body: {`{ token: "[token_string]" }`}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)" }}>
                       {`{ active: true, sub: "[userId]", ... }`}
                     </div>
                   </td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Client Credentials</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Credentials</span></td>
                 </tr>
                 <tr>
                   <td><span className="method-tag">GET</span></td>
                   <td><code>/o/logout</code></td>
                   <td>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", lineHeight: 1.45 }}>
                       ?id_token_hint=[id_token]<br />
                       &post_logout_redirect_uri=[url]
                     </div>
                   </td>
                   <td>Clears session and redirects to post logout redirect URI or root</td>
-                  <td><span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)" }}>Public</span></td>
+                  <td><span style={{ fontSize: "0.72rem", fontFamily: "var(--font-mono)", color: "var(--fg-white)", background: "rgba(255,255,255,0.03)", padding: "3px 6px", borderRadius: "3px" }}>Public</span></td>
                 </tr>
               </tbody>
             </table>
@@ -155,8 +156,9 @@ export const RoutesOverview: React.FC = () => {
         {/* Developer Client Lifecycle - Span 6 */}
         <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
           <div>
-            <h3 style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <AppWindow size={16} /> Developer Client Management
+            <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
+              <AppWindow size={16} style={{ color: "var(--accent)" }} /> 
+              <span>Developer Client Management</span>
             </h3>
             <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
               Endpoints for self-registering client application details.
@@ -164,12 +166,12 @@ export const RoutesOverview: React.FC = () => {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "12px" }}>
+            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                 <span className="method-tag">GET</span>
                 <code style={{ color: "var(--fg-white)" }}>/clients/register</code>
               </div>
-              <p style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--fg)", opacity: 0.85 }}>
                 Renders the client self-registration page. Requires an active logged-in session.
               </p>
             </div>
@@ -180,14 +182,14 @@ export const RoutesOverview: React.FC = () => {
                 <code style={{ color: "var(--fg-white)" }}>/clients/register</code>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.8rem" }}>
-                <p style={{ color: "var(--muted)" }}>
+                <p style={{ color: "var(--fg)", opacity: 0.85 }}>
                   Submits a registration request for admin review.
                 </p>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--fg)", background: "var(--bg-darkest)", padding: "8px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--fg)", background: "rgba(5, 5, 8, 0.5)", padding: "8px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--glass-border)", lineHeight: 1.45 }}>
                   <strong>Body Schema:</strong><br />
                   {`{`}<br />
                   &nbsp;&nbsp;clientName: "[app_name]",<br />
-                  &nbsp;&nbsp;redirectUris: ["[callback_url]"],<br />
+                  &nbsp;&nbsp;redirectUris: ["[callback]"],<br />
                   &nbsp;&nbsp;description: "[app_description]"<br />
                   {`}`}
                 </div>
@@ -199,8 +201,9 @@ export const RoutesOverview: React.FC = () => {
         {/* Administrator Dashboards - Span 6 */}
         <div className="bento-card span-6" style={{ gap: "var(--space-md)" }}>
           <div>
-            <h3 style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Shield size={16} /> Admin Approval Queues
+            <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--fg-white)" }}>
+              <Shield size={16} style={{ color: "var(--accent)" }} /> 
+              <span>Admin Approval Queues</span>
             </h3>
             <p style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
               Endpoints restricted to administrative roles for reviewing clients.
@@ -208,22 +211,22 @@ export const RoutesOverview: React.FC = () => {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "12px" }}>
+            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                 <span className="method-tag">GET</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations</code>
               </div>
-              <p style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--fg)", opacity: 0.85 }}>
                 Retrieves all submitted registrations with state <code>pending</code>.
               </p>
             </div>
 
-            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "12px" }}>
+            <div style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "12px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                 <span className="method-tag">POST</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations/:id/approve</code>
               </div>
-              <p style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--fg)", opacity: 0.85 }}>
                 Approves client, creates OAuth entity, hashes secret, and returns cleartext credentials.
               </p>
             </div>
@@ -233,7 +236,7 @@ export const RoutesOverview: React.FC = () => {
                 <span className="method-tag">POST</span>
                 <code style={{ color: "var(--fg-white)" }}>/admin/registrations/:id/reject</code>
               </div>
-              <p style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--fg)", opacity: 0.85 }}>
                 Rejects client registration. Discards client registration record.
               </p>
             </div>
@@ -244,3 +247,5 @@ export const RoutesOverview: React.FC = () => {
     </div>
   );
 };
+
+export default RoutesOverview;

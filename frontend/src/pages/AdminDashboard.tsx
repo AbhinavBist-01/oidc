@@ -128,20 +128,20 @@ export const AdminDashboard: React.FC = () => {
           </div>
           <button onClick={loadPending} className="btn btn-secondary" disabled={loading} style={{ height: "2.3rem", padding: "0 14px", gap: "6px" }}>
             <RefreshCw size={14} className={loading ? "spin-anim" : ""} />
-            Refresh
+            <span>Refresh</span>
           </button>
         </div>
 
         {error && (
-          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
+          <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: 0 }}>
             <AlertCircle size={16} />
             <span>{error}</span>
           </div>
         )}
 
         {msg && (
-          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: 0 }}>
-            <ShieldCheck size={16} />
+          <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: 0 }}>
+            <ShieldCheck size={16} style={{ color: "var(--success-text)" }} />
             <span>{msg}</span>
           </div>
         )}
@@ -152,7 +152,7 @@ export const AdminDashboard: React.FC = () => {
             <span style={{ fontSize: "0.88rem" }}>Loading pending applications...</span>
           </div>
         ) : registrations.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", fontSize: "0.88rem", border: "1px dashed var(--border)", borderRadius: "var(--radius-md)", background: "rgba(255,255,255,0.01)" }}>
+          <div style={{ textAlign: "center", padding: "var(--space-xl) 0", color: "var(--muted)", fontSize: "0.88rem", border: "1px dashed var(--glass-border)", borderRadius: "var(--radius-md)", background: "rgba(255,255,255,0.01)" }}>
             No pending client registrations.
           </div>
         ) : (
@@ -160,35 +160,37 @@ export const AdminDashboard: React.FC = () => {
             {registrations.map((r) => {
               const clientCreds = creds[r.id];
               return (
-                <div key={r.id} className="glass-panel" style={{ background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div key={r.id} className="glass-panel" style={{ background: "rgba(10, 10, 15, 0.4)", border: "1px solid var(--glass-border)", padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "12px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", flexWrap: "wrap" }}>
                     <div>
-                      <strong style={{ fontSize: "1.1rem", color: "var(--fg-white)" }}>{r.clientName}</strong>
+                      <strong style={{ fontSize: "1.05rem", color: "var(--fg-white)" }}>{r.clientName}</strong>
                       <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "3px" }}>
-                        Application ID: <code style={{ color: "var(--fg-white)", background: "var(--bg-darkest)", padding: "2px 6px", borderRadius: "3px", border: "1px solid var(--border)" }}>{r.id}</code>
+                        Application ID: <code style={{ color: "var(--accent)", background: "rgba(0, 240, 255, 0.02)", padding: "3px 6px", borderRadius: "4px", border: "1px solid var(--glass-border)" }}>{r.id}</code>
                       </div>
                     </div>
 
                     {!clientCreds && (
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <button onClick={() => handleReject(r.id)} className="btn btn-secondary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.82rem" }}>
-                          <X size={14} /> Reject
+                        <button onClick={() => handleReject(r.id)} className="btn btn-secondary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.8rem" }}>
+                          <X size={14} style={{ color: "var(--danger-text)" }} /> 
+                          <span>Reject</span>
                         </button>
-                        <button onClick={() => handleApprove(r.id)} className="btn btn-primary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.82rem" }}>
-                          <Check size={14} /> Approve
+                        <button onClick={() => handleApprove(r.id)} className="btn btn-secondary" style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.8rem", borderColor: "var(--accent)" }}>
+                          <Check size={14} style={{ color: "var(--accent)" }} /> 
+                          <span>Approve</span>
                         </button>
                       </div>
                     )}
                   </div>
 
-                  <div style={{ fontSize: "0.88rem", display: "flex", flexDirection: "column", gap: "6px", background: "var(--bg-darkest)", padding: "10px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+                  <div style={{ fontSize: "0.88rem", display: "flex", flexDirection: "column", gap: "6px", background: "rgba(5, 5, 8, 0.5)", padding: "12px", borderRadius: "var(--radius-md)", border: "1px solid var(--glass-border)" }}>
                     <div>
                       <span style={{ color: "var(--muted)", fontWeight: 500 }}>Redirect URIs:</span>{" "}
                       <code style={{ background: "rgba(255,255,255,0.01)", padding: "3px 6px", borderRadius: "3px", fontSize: "0.78rem", color: "var(--fg-white)" }}>
                         {JSON.stringify(r.redirectUris)}
                       </code>
                     </div>
-                    <div>
+                    <div style={{ marginTop: "4px" }}>
                       <span style={{ color: "var(--muted)", fontWeight: 500 }}>Description:</span>{" "}
                       <span style={{ color: "var(--fg)", opacity: 0.9 }}>{r.description || "No description provided."}</span>
                     </div>
@@ -196,8 +198,8 @@ export const AdminDashboard: React.FC = () => {
 
                   {clientCreds && (
                     <div style={{ 
-                      background: "var(--bg-darkest)", 
-                      border: "1px dashed var(--border-hover)", 
+                      background: "rgba(0, 240, 255, 0.02)", 
+                      border: "1px dashed var(--accent)", 
                       borderRadius: "var(--radius-md)", 
                       padding: "var(--space-md)", 
                       display: "flex", 
@@ -205,15 +207,15 @@ export const AdminDashboard: React.FC = () => {
                       gap: "10px", 
                       marginTop: "4px" 
                     }}>
-                      <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--fg-white)", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: "6px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                         <Terminal size={14} /> Generated Credentials
                       </span>
                       
-                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                           <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Client ID:</span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
+                            <code style={{ flex: 1, background: "rgba(5, 5, 8, 0.7)", border: "1px solid var(--glass-border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
                               {clientCreds.clientId}
                             </code>
                             <button
@@ -221,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
                               className="btn btn-secondary"
                               style={{ height: "2.1rem", padding: "0 10px" }}
                             >
-                              {copiedId === r.id ? <ClipboardCheck size={14} style={{ color: "var(--fg-white)" }} /> : <Copy size={14} />}
+                              {copiedId === r.id ? <ClipboardCheck size={14} style={{ color: "var(--accent)" }} /> : <Copy size={14} />}
                             </button>
                           </div>
                         </div>
@@ -229,10 +231,10 @@ export const AdminDashboard: React.FC = () => {
                         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                           <span style={{ fontSize: "0.75rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "4px" }}>
                             <span>Client Secret:</span> 
-                            <strong style={{ color: "var(--fg-white)" }}>(Save now - shown only once)</strong>
+                            <strong style={{ color: "var(--accent)" }}>(Save now - shown only once)</strong>
                           </span>
                           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <code style={{ flex: 1, background: "var(--bg-darker)", border: "1px solid var(--border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
+                            <code style={{ flex: 1, background: "rgba(5, 5, 8, 0.7)", border: "1px solid var(--glass-border)", padding: "6px 10px", borderRadius: "4px", fontSize: "0.82rem", color: "var(--fg-white)" }}>
                               {clientCreds.clientSecret}
                             </code>
                             <button
@@ -240,13 +242,13 @@ export const AdminDashboard: React.FC = () => {
                               className="btn btn-secondary"
                               style={{ height: "2.1rem", padding: "0 10px" }}
                             >
-                              {copiedSecret === r.id ? <ClipboardCheck size={14} style={{ color: "var(--fg-white)" }} /> : <Copy size={14} />}
+                              {copiedSecret === r.id ? <ClipboardCheck size={14} style={{ color: "var(--accent)" }} /> : <Copy size={14} />}
                             </button>
                           </div>
                         </div>
                       </div>
                       
-                      <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontStyle: "italic", borderTop: "1px solid var(--border)", paddingTop: "8px", marginTop: "4px" }}>
+                      <span style={{ fontSize: "0.72rem", color: "var(--muted)", fontStyle: "italic", borderTop: "1px solid rgba(0, 240, 255, 0.1)", paddingTop: "8px", marginTop: "4px" }}>
                         * Note: The secret is stored using a secure hashing algorithm on the server. The raw cleartext is only visible here.
                       </span>
                     </div>
@@ -260,3 +262,5 @@ export const AdminDashboard: React.FC = () => {
     </div>
   );
 };
+
+export default AdminDashboard;
