@@ -30,45 +30,47 @@ export const Header: React.FC = () => {
   return (
     <header className={`app-header ${scrolled ? "scrolled" : ""}`}>
       <Link to="/" className="logo">
-        OIDC Provider <span className="logo-dot"></span>
+        <span style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>OIDC</span>
+        <span style={{ fontWeight: 400, color: "var(--fg)", fontSize: "1.05rem" }}>Engine</span>
+        <span className="logo-dot"></span>
       </Link>
 
-      <nav className="app-nav" style={{ display: "flex", alignItems: "center" }}>
+      <nav className="app-nav">
         <Link 
           to="/routes" 
           className={isActive("/routes") ? "active" : ""}
-          style={{ position: "relative" }}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-            <Code size={15} /> Routes
+            <Code size={14} style={{ color: isActive("/routes") ? "var(--accent)" : "inherit" }} />
+            <span>Routes</span>
           </span>
         </Link>
         <Link 
           to="/o/authenticate" 
           className={isActive("/o/authenticate") ? "active" : ""}
-          style={{ position: "relative" }}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-            <User size={15} /> Auth
+            <User size={14} style={{ color: isActive("/o/authenticate") ? "var(--accent)" : "inherit" }} />
+            <span>Console Auth</span>
           </span>
         </Link>
         <Link 
           to="/clients/register" 
           className={isActive("/clients/register") ? "active" : ""}
-          style={{ position: "relative" }}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-            <Layout size={15} /> Dev Client
+            <Layout size={14} style={{ color: isActive("/clients/register") ? "var(--accent)" : "inherit" }} />
+            <span>Client Registry</span>
           </span>
         </Link>
         {user?.isAdmin && (
           <Link 
             to="/admin/dashboard" 
             className={isActive("/admin/dashboard") ? "active" : ""}
-            style={{ position: "relative" }}
           >
             <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <Shield size={15} /> Admin
+              <Shield size={14} style={{ color: isActive("/admin/dashboard") ? "var(--accent)" : "inherit" }} />
+              <span>Admin Queue</span>
             </span>
           </Link>
         )}
@@ -76,26 +78,31 @@ export const Header: React.FC = () => {
           href="/.well-known/openid-configuration" 
           target="_blank" 
           rel="noreferrer"
-          style={{ position: "relative" }}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-            <HelpCircle size={15} /> Discovery
+            <HelpCircle size={14} />
+            <span>Discovery</span>
           </span>
         </a>
 
         {user && (
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "12px", borderLeft: "1px solid var(--border)", paddingLeft: "16px" }}>
-            <span style={{ fontSize: "0.85rem", color: "#ffffff", fontWeight: 600 }}>
-              {user.name}
-            </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px", borderLeft: "1px solid var(--glass-border)", paddingLeft: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+              <span style={{ fontSize: "0.8rem", color: "var(--fg-white)", fontWeight: 600 }}>
+                {user.name}
+              </span>
+              <span style={{ fontSize: "0.65rem", color: "var(--accent)", fontFamily: "var(--font-mono)", fontWeight: 600, textTransform: "uppercase" }}>
+                {user.isAdmin ? "Admin" : "Developer"}
+              </span>
+            </div>
             <button
               onClick={logout}
               className="btn btn-secondary"
-              style={{ height: "2rem", padding: "0 12px", fontSize: "0.8rem", gap: "4px", borderRadius: "var(--radius-sm)" }}
+              style={{ height: "2.1rem", padding: "0 12px", fontSize: "0.78rem", gap: "6px" }}
               title="Logout"
             >
               <LogOut size={12} />
-              Logout
+              <span>Sign Out</span>
             </button>
           </div>
         )}
@@ -103,3 +110,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+
+export default Header;
