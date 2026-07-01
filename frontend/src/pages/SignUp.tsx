@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UserPlus, Lock, Mail, User, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { UserPlus, Lock, Mail, User, Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 
 export const SignUp: React.FC = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -86,38 +86,38 @@ export const SignUp: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "20px" }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "440px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
         
         <div style={{ textAlign: "center" }}>
           <div style={{ 
-            width: "48px", 
-            height: "48px", 
+            width: "52px", 
+            height: "52px", 
             borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--border)", 
-            background: "rgba(255, 255, 255, 0.02)", 
+            border: "1px solid var(--glass-border)", 
+            background: "rgba(0, 240, 255, 0.04)", 
             display: "inline-flex", 
             alignItems: "center", 
             justifyContent: "center", 
             marginBottom: "12px", 
-            color: "var(--fg-white)" 
+            color: "var(--accent)" 
           }}>
             <UserPlus size={22} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.25rem" }}>Create Account</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px", color: "var(--muted)" }}>Enter your details to get started</p>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Create Developer Account</h2>
+          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your registration details below</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           {error && (
-            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: "0 0 16px 0" }}>
+            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: "0 0 16px 0" }}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: "0 0 16px 0" }}>
+            <div className="alert alert-success" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: "0 0 16px 0" }}>
               <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
               <span>{success}</span>
             </div>
@@ -196,7 +196,7 @@ export const SignUp: React.FC = () => {
             </span>
           </div>
 
-          <div className="form-group" style={{ marginBottom: "20px" }}>
+          <div className="form-group" style={{ marginBottom: "24px" }}>
             <label htmlFor="confirmPassword">Confirm Password</label>
             <div style={{ position: "relative" }}>
               <Lock size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
@@ -207,12 +207,12 @@ export const SignUp: React.FC = () => {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ paddingLeft: "42px", borderColor: passwordMismatch ? "var(--border-hover)" : "" }}
+                style={{ paddingLeft: "42px", borderColor: passwordMismatch ? "var(--danger)" : "" }}
                 required
               />
             </div>
             {passwordMismatch && (
-              <span style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "4px" }}>
+              <span style={{ fontSize: "0.75rem", color: "var(--danger-text)", marginTop: "4px" }}>
                 Passwords do not match
               </span>
             )}
@@ -222,21 +222,24 @@ export const SignUp: React.FC = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="spin-anim" />
-                Creating account...
+                <span>Creating Account...</span>
               </>
             ) : (
-              "Create account"
+              <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span>Create Account</span>
+                <ArrowRight size={14} />
+              </span>
             )}
           </button>
         </form>
 
-        <p style={{ fontSize: "0.75rem", color: "var(--muted)", textAlign: "center", lineHeight: "1.5" }}>
-          By creating an account you agree to our{" "}
+        <p style={{ fontSize: "0.75rem", color: "var(--muted)", textAlign: "center", lineHeight: "1.5", padding: "0 10px" }}>
+          By registering, you agree to our{" "}
           <a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a> and{" "}
           <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>.
         </p>
 
-        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "14px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--glass-border)", paddingTop: "14px" }}>
           Already have an account?{" "}
           <a href={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>
             Sign in
@@ -246,3 +249,5 @@ export const SignUp: React.FC = () => {
     </div>
   );
 };
+
+export default SignUp;

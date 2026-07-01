@@ -60,40 +60,40 @@ export const Login: React.FC = () => {
 
   if (user) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "20px" }}>
-        <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", textAlign: "center", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
+        <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", textAlign: "center", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
           <div style={{ 
-            width: "48px", 
-            height: "48px", 
+            width: "52px", 
+            height: "52px", 
             borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--border)", 
-            background: "rgba(255, 255, 255, 0.02)", 
+            border: "1px solid var(--glass-border)", 
+            background: "rgba(0, 240, 255, 0.04)", 
             display: "inline-flex", 
             alignItems: "center", 
             justifyContent: "center", 
             margin: "0 auto", 
-            color: "var(--fg-white)" 
+            color: "var(--accent)" 
           }}>
-            <KeyRound size={22} />
+            <KeyRound size={24} />
           </div>
           <div>
-            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.25rem" }}>Already Signed In</h2>
-            <p style={{ fontSize: "0.88rem", marginTop: "6px", color: "var(--fg)" }}>
-              You are signed in as <strong style={{ color: "var(--fg-white)" }}>{user.email}</strong>.
+            <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Already Signed In</h2>
+            <p style={{ fontSize: "0.88rem", marginTop: "8px", color: "var(--fg)" }}>
+              You are authenticated as <strong style={{ color: "var(--fg-white)" }}>{user.email}</strong>.
             </p>
           </div>
           
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px" }}>
             {redirectUri && (
-              <a href={redirectUri} className="btn btn-primary" style={{ textDecoration: "none", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                <span>Return to Application</span>
+              <a href={redirectUri} className="btn btn-primary" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                <span>Return to Client App</span>
                 <ArrowRight size={14} />
               </a>
             )}
             <button onClick={logout} className="btn btn-secondary">
               Sign In with Another Account
             </button>
-            <Link to="/" className="btn" style={{ textDecoration: "none" }}>
+            <Link to="/" className="btn btn-secondary">
               Go to Developer Console
             </Link>
           </div>
@@ -103,31 +103,31 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "20px" }}>
-      <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
+      <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
         
         <div style={{ textAlign: "center" }}>
           <div style={{ 
-            width: "48px", 
-            height: "48px", 
+            width: "52px", 
+            height: "52px", 
             borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--border)", 
-            background: "rgba(255, 255, 255, 0.02)", 
+            border: "1px solid var(--glass-border)", 
+            background: "rgba(0, 240, 255, 0.04)", 
             display: "inline-flex", 
             alignItems: "center", 
             justifyContent: "center", 
             marginBottom: "12px", 
-            color: "var(--fg-white)" 
+            color: "var(--accent)" 
           }}>
             <Lock size={22} />
           </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.25rem" }}>Account Sign In</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "4px", color: "var(--muted)" }}>Enter your credentials to continue</p>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Account Sign In</h2>
+          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your OIDC credentials to authenticate</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           {error && (
-            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px var(--space-md)", margin: "0 0 16px 0" }}>
+            <div className="alert alert-danger" style={{ display: "flex", alignItems: "center", gap: "8px", padding: "12px", margin: "0 0 16px 0" }}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
@@ -136,7 +136,7 @@ export const Login: React.FC = () => {
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <div style={{ position: "relative" }}>
-              <Mail size={16} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
+              <Mail size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="email"
                 type="email"
@@ -150,15 +150,15 @@ export const Login: React.FC = () => {
             </div>
           </div>
 
-          <div className="form-group" style={{ marginBottom: "20px" }}>
+          <div className="form-group" style={{ marginBottom: "24px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <label htmlFor="password">Password</label>
-              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.78rem", color: "var(--muted)", textDecoration: "none" }}>
+              <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: "0.78rem", color: "var(--muted)", borderBottom: "none" }}>
                 Forgot password?
               </a>
             </div>
             <div style={{ position: "relative" }}>
-              <Lock size={16} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
+              <Lock size={15} style={{ position: "absolute", left: "14px", top: "14px", color: "var(--muted)" }} />
               <input
                 id="password"
                 type="password"
@@ -176,28 +176,33 @@ export const Login: React.FC = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="spin-anim" />
-                Signing in...
+                <span>Authenticating...</span>
               </>
             ) : (
-              "Sign in"
+              <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span>Authenticate Session</span>
+                <ArrowRight size={14} />
+              </span>
             )}
           </button>
         </form>
 
-        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "10px" }}>
           <span>
-            Don't have an account?{" "}
-            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)" }}>
+            Don't have an developer account?{" "}
+            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", borderBottom: "none" }}>
               Sign up
             </a>
           </span>
-          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "12px", marginTop: "8px", display: "flex", justifyContent: "center", gap: "16px" }}>
-            <Link to="/clients/register" style={{ textDecoration: "none", fontSize: "0.8rem" }}>Dev Client</Link>
-            <span style={{ color: "var(--muted-dark)" }}>|</span>
-            <Link to="/admin/dashboard" style={{ textDecoration: "none", fontSize: "0.8rem" }}>Admin Console</Link>
+          <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: "14px", marginTop: "8px", display: "flex", justifyContent: "center", gap: "16px" }}>
+            <Link to="/clients/register" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Register Client</Link>
+            <span style={{ color: "var(--glass-border)" }}>|</span>
+            <Link to="/admin/dashboard" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Admin Console</Link>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+export default Login;
