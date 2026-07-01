@@ -18,7 +18,7 @@ export const Landing: React.FC = () => {
           A secure, OIDC-compliant authorization server. Provision developer app credentials, verify PKCE challenge parameters, and orchestrate user sessions.
         </p>
         <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginTop: "12px", justifyContent: "center" }}>
-          <Link to="/o/authenticate" className="btn btn-primary">
+          <Link to="/o/authenticate" search={{}} className="btn btn-primary">
             <Play size={14} style={{ fill: "currentColor" }} />
             <span>Start Integration</span>
           </Link>

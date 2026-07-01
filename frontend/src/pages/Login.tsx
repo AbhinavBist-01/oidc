@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { useAuth } from "../context/AuthContext";
 import { Loader2, AlertCircle, ArrowRight } from "lucide-react";
 
 export const Login: React.FC = () => {
   const { user, fetchUser, logout } = useAuth();
-  const searchParams = new URLSearchParams(window.location.search);
+  const search = useSearch({ strict: false }) as any;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const clientId = search.client_id || "";
+  const redirectUri = search.redirect_uri || "";
+  const state = search.state || "";
+  const nonce = search.nonce || "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,10 +34,10 @@ export const Login: React.FC = () => {
         body: JSON.stringify({
           email: email.trim(),
           password,
-          client_id: searchParams.get("client_id"),
-          redirect_uri: searchParams.get("redirect_uri"),
-          state: searchParams.get("state"),
-          nonce: searchParams.get("nonce"),
+          client_id: clientId || undefined,
+          redirect_uri: redirectUri || undefined,
+          state: state || undefined,
+          nonce: nonce || undefined,
         }),
       });
 
@@ -56,7 +61,20 @@ export const Login: React.FC = () => {
     }
   };
 
-  const redirectUri = searchParams.get("redirect_uri");
+  const getHelperMessage = () => {
+    if (redirectUri.includes("/clients/register")) {
+      return "Sign in to access Client Registration";
+    }
+    if (redirectUri.includes("/admin/dashboard")) {
+      return "Sign in to access Admin Console";
+    }
+    if (redirectUri) {
+      return "Sign in to authorize your session";
+    }
+    return null;
+  };
+
+  const helperMsg = getHelperMessage();
 
   if (user) {
     return (
@@ -94,7 +112,9 @@ export const Login: React.FC = () => {
         
         <div style={{ textAlign: "center" }}>
           <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Account Sign In</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your OIDC credentials to authenticate</p>
+          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: helperMsg ? "var(--fg-white)" : "var(--muted)", fontWeight: helperMsg ? 500 : 400 }}>
+            {helperMsg || "Enter your OIDC credentials to authenticate"}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
@@ -154,14 +174,18 @@ export const Login: React.FC = () => {
         <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "12px" }}>
           <span>
             Don't have a developer account?{" "}
-            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)", borderBottom: "none" }}>
+            <Link to="/o/sign-up" search={search} style={{ fontWeight: 600, color: "var(--fg-white)", borderBottom: "none" }}>
               Sign up
-            </a>
+            </Link>
           </span>
           <div style={{ borderTop: "1px solid var(--border)", paddingTop: "16px", marginTop: "4px", display: "flex", justifyContent: "center", gap: "16px" }}>
-            <Link to="/clients/register" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Register Client</Link>
+            <Link to="/o/authenticate" search={{ redirect_uri: "/clients/register" }} style={{ borderBottom: "none", fontSize: "0.8rem" }}>
+              Register Client
+            </Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link to="/admin/dashboard" style={{ borderBottom: "none", fontSize: "0.8rem" }}>Admin Console</Link>
+            <Link to="/o/authenticate" search={{ redirect_uri: "/admin/dashboard" }} style={{ borderBottom: "none", fontSize: "0.8rem" }}>
+              Admin Console
+            </Link>
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link, useSearch } from "@tanstack/react-router";
 import { Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 
 export const SignUp: React.FC = () => {
-  const searchParams = new URLSearchParams(window.location.search);
+  const search = useSearch({ strict: false }) as any;
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -55,10 +56,10 @@ export const SignUp: React.FC = () => {
           lastName: lastName.trim(),
           email: email.trim(),
           password,
-          client_id: searchParams.get("client_id"),
-          redirect_uri: searchParams.get("redirect_uri"),
-          state: searchParams.get("state"),
-          nonce: searchParams.get("nonce"),
+          client_id: search.client_id,
+          redirect_uri: search.redirect_uri,
+          state: search.state,
+          nonce: search.nonce,
         }),
       });
 
@@ -74,7 +75,13 @@ export const SignUp: React.FC = () => {
       } else {
         setSuccess("Account created successfully! Redirecting to sign in…");
         setTimeout(() => {
-          window.location.href = `/o/authenticate?${searchParams.toString()}`;
+          // Since we want client-side transitions, but full page redirect is cleaner to reset state, 
+          // we can redirect to sign in with serialized search parameters
+          const params = new URLSearchParams();
+          Object.entries(search).forEach(([key, val]) => {
+            if (val) params.set(key, String(val));
+          });
+          window.location.href = `/o/authenticate?${params.toString()}`;
         }, 1500);
       }
     } catch (err) {
@@ -208,9 +215,9 @@ export const SignUp: React.FC = () => {
 
         <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
           Already have an account?{" "}
-          <a href={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--fg-white)", textDecoration: "none" }}>
+          <Link to="/o/authenticate" search={search} style={{ fontWeight: 600, color: "var(--fg-white)", textDecoration: "none" }}>
             Sign in
-          </a>
+          </Link>
         </div>
       </div>
     </div>

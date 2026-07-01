@@ -67,6 +67,7 @@ export const Header: React.FC = () => {
           ) : (
             <Link 
               to="/o/authenticate" 
+              search={{}}
               className="btn btn-primary"
               style={{ height: "2rem", padding: "0 12px", fontSize: "0.78rem" }}
             >

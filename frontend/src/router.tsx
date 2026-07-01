@@ -5,6 +5,7 @@ import {
   createRouter,
   Outlet,
   Navigate,
+  useNavigate,
 } from "@tanstack/react-router";
 import { useAuth } from "./context/AuthContext";
 import { Header } from "./components/Header";
@@ -25,7 +26,7 @@ const RootLayout: React.FC = () => {
         <Outlet />
       </main>
       
-      <footer style={{ borderTop: "1px solid var(--glass-border)", padding: "16px", textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", background: "rgba(3, 3, 5, 0.4)" }}>
+      <footer style={{ borderTop: "1px solid var(--border)", padding: "16px", textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", background: "var(--bg-darker)" }}>
         <div>OIDC Provider Developer Console &copy; 2026</div>
       </footer>
     </div>
@@ -34,9 +35,16 @@ const RootLayout: React.FC = () => {
 
 // Helper to handle login redirect dynamically (bypassing strict router path parameter typing)
 const RedirectToLogin: React.FC = () => {
+  const navigate = useNavigate();
   React.useEffect(() => {
-    window.location.replace(`/o/authenticate?redirect_uri=${encodeURIComponent(window.location.pathname + window.location.search)}`);
-  }, []);
+    navigate({
+      to: "/o/authenticate",
+      search: {
+        redirect_uri: window.location.pathname + window.location.search,
+      },
+      replace: true,
+    });
+  }, [navigate]);
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", color: "var(--muted)" }}>
       Redirecting to sign in...
@@ -89,12 +97,42 @@ const routesOverviewRoute = createRoute({
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/o/authenticate",
+  validateSearch: (search: Record<string, unknown>) => {
+    const res: {
+      redirect_uri?: string;
+      client_id?: string;
+      state?: string;
+      nonce?: string;
+      scope?: string;
+    } = {};
+    if (search.redirect_uri) res.redirect_uri = search.redirect_uri as string;
+    if (search.client_id) res.client_id = search.client_id as string;
+    if (search.state) res.state = search.state as string;
+    if (search.nonce) res.nonce = search.nonce as string;
+    if (search.scope) res.scope = search.scope as string;
+    return res;
+  },
   component: Login,
 });
 
 const signUpRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/o/sign-up",
+  validateSearch: (search: Record<string, unknown>) => {
+    const res: {
+      redirect_uri?: string;
+      client_id?: string;
+      state?: string;
+      nonce?: string;
+      scope?: string;
+    } = {};
+    if (search.redirect_uri) res.redirect_uri = search.redirect_uri as string;
+    if (search.client_id) res.client_id = search.client_id as string;
+    if (search.state) res.state = search.state as string;
+    if (search.nonce) res.nonce = search.nonce as string;
+    if (search.scope) res.scope = search.scope as string;
+    return res;
+  },
   component: SignUp,
 });
 
