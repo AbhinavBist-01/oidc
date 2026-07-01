@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShieldCheck, ShieldAlert, Check, HelpCircle } from "lucide-react";
+import { ShieldAlert, Check, HelpCircle } from "lucide-react";
 
 export const Consent: React.FC = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -51,25 +51,11 @@ export const Consent: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "40px 20px" }}>
-      <main className="glass-panel" style={{ width: "100%", maxWidth: "520px", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
+      <main className="glass-panel" style={{ width: "100%", maxWidth: "500px", display: "flex", flexDirection: "column", gap: "24px" }}>
         
         <div style={{ textAlign: "center" }}>
-          <div style={{ 
-            width: "52px", 
-            height: "52px", 
-            borderRadius: "var(--radius-md)", 
-            border: "1px solid var(--glass-border)", 
-            background: "rgba(0, 240, 255, 0.04)", 
-            display: "inline-flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            marginBottom: "12px", 
-            color: "var(--accent)" 
-          }}>
-            <ShieldCheck size={26} />
-          </div>
-          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem" }}>Authorize Application</h2>
+          <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Authorize Application</h2>
           <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>An external application is requesting access to your user identity</p>
         </div>
 
@@ -81,25 +67,25 @@ export const Consent: React.FC = () => {
         )}
 
         <section style={{ 
-          background: "rgba(5, 5, 8, 0.5)", 
-          border: "1px solid var(--glass-border)", 
+          background: "var(--bg-darkest)", 
+          border: "1px solid var(--border)", 
           borderRadius: "var(--radius-md)", 
-          padding: "var(--space-md)", 
+          padding: "20px", 
           display: "flex", 
           flexDirection: "column", 
-          gap: "14px" 
+          gap: "16px" 
         }}>
           <div style={{ fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "4px" }}>
-            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.08em" }}>Client ID:</span>
-            <code style={{ background: "rgba(0, 240, 255, 0.02)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", border: "1px solid var(--glass-border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{clientId}</code>
+            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.68rem", letterSpacing: "0.05em" }}>Client ID</span>
+            <code style={{ background: "rgba(255,255,255,0.01)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", border: "1px solid var(--border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{clientId}</code>
           </div>
           <div style={{ fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "4px" }}>
-            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.08em" }}>Redirect URI:</span>
-            <code style={{ background: "rgba(0, 240, 255, 0.02)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", overflowWrap: "anywhere", border: "1px solid var(--glass-border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{redirectUri}</code>
+            <span style={{ color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.68rem", letterSpacing: "0.05em" }}>Redirect URI</span>
+            <code style={{ background: "rgba(255,255,255,0.01)", padding: "8px 12px", borderRadius: "var(--radius-sm)", color: "var(--fg-white)", overflowWrap: "anywhere", border: "1px solid var(--border)", fontFamily: "var(--font-mono)", fontSize: "0.78rem" }}>{redirectUri}</code>
           </div>
           
-          <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: "14px", marginTop: "4px" }}>
-            <span style={{ color: "var(--muted)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: "10px" }}>Requested Access Scopes:</span>
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "16px", marginTop: "4px" }}>
+            <span style={{ color: "var(--muted)", fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "10px" }}>Requested Access Scopes</span>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {scopesList.map((item, idx) => (
                 <div key={idx} style={{ 
@@ -111,22 +97,22 @@ export const Consent: React.FC = () => {
                   background: "rgba(255,255,255,0.01)",
                   padding: "8px 12px",
                   borderRadius: "var(--radius-sm)",
-                  border: "1px solid var(--glass-border)"
+                  border: "1px solid var(--border)"
                 }}>
                   <div style={{ 
-                    width: "18px", 
-                    height: "18px", 
-                    border: "1px solid rgba(0, 240, 255, 0.3)", 
-                    background: "rgba(0, 240, 255, 0.05)", 
+                    width: "16px", 
+                    height: "16px", 
+                    border: "1px solid var(--border-hover)", 
+                    background: "rgba(255, 255, 255, 0.02)", 
                     display: "flex", 
                     alignItems: "center", 
                     justifyContent: "center", 
-                    color: "var(--accent)", 
+                    color: "var(--fg-white)", 
                     borderRadius: "4px" 
                   }}>
-                    <Check size={11} strokeWidth={3} />
+                    <Check size={10} strokeWidth={3} />
                   </div>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.82rem", fontWeight: 500 }}>{item}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 500 }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -134,8 +120,8 @@ export const Consent: React.FC = () => {
         </section>
 
         <p style={{ fontSize: "0.75rem", color: "var(--muted)", textAlign: "center", margin: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
-          <HelpCircle size={14} style={{ color: "var(--accent)" }} />
-          <span>Verify client app credentials before authorizing.</span>
+          <HelpCircle size={13} />
+          <span>Verify client details before authorizing.</span>
         </p>
 
         <div className="actions" style={{ display: "flex", gap: "12px", marginTop: "4px" }}>
@@ -153,7 +139,7 @@ export const Consent: React.FC = () => {
             onClick={() => handleDecision("allow")}
             disabled={loading}
           >
-            {loading ? "Authorizing..." : "Allow Access"}
+            {loading ? "Authorizing…" : "Allow Access"}
           </button>
         </div>
       </main>
