@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { UserPlus, Lock, Mail, User, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export const SignUp: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(window.location.search);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -76,7 +74,7 @@ export const SignUp: React.FC = () => {
       } else {
         setSuccess("Account created successfully! Redirecting to sign in...");
         setTimeout(() => {
-          navigate(`/o/authenticate?${searchParams.toString()}`);
+          window.location.href = `/o/authenticate?${searchParams.toString()}`;
         }, 1500);
       }
     } catch (err) {
@@ -240,9 +238,9 @@ export const SignUp: React.FC = () => {
 
         <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", borderTop: "1px solid var(--border)", paddingTop: "14px" }}>
           Already have an account?{" "}
-          <Link to={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>
+          <a href={`/o/authenticate?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>
             Sign in
-          </Link>
+          </a>
         </div>
       </div>
     </div>

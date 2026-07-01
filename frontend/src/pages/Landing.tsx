@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Play, PlusCircle, ShieldAlert, ArrowRight, Check, Shield, Cpu, Code, Eye } from "lucide-react";
 
 export const Landing: React.FC = () => {

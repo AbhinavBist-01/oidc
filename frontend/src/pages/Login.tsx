@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { useAuth } from "../context/AuthContext";
 import { KeyRound, Lock, Mail, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 
 export const Login: React.FC = () => {
   const { user, fetchUser, logout } = useAuth();
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -187,9 +187,9 @@ export const Login: React.FC = () => {
         <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", display: "flex", flexDirection: "column", gap: "8px" }}>
           <span>
             Don't have an account?{" "}
-            <Link to={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)" }}>
+            <a href={`/o/sign-up?${searchParams.toString()}`} style={{ fontWeight: 600, color: "var(--accent)" }}>
               Sign up
-            </Link>
+            </a>
           </span>
           <div style={{ borderTop: "1px solid var(--border)", paddingTop: "12px", marginTop: "8px", display: "flex", justifyContent: "center", gap: "16px" }}>
             <Link to="/clients/register" style={{ textDecoration: "none", fontSize: "0.8rem" }}>Dev Client</Link>

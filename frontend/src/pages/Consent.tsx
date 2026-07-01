@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { ShieldCheck, ShieldAlert, Check, HelpCircle } from "lucide-react";
 
 export const Consent: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
