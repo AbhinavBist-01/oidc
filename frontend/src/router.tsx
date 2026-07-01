@@ -27,7 +27,7 @@ const RootLayout: React.FC = () => {
       </main>
       
       <footer style={{ borderTop: "1px solid var(--border)", padding: "16px", textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", background: "var(--bg-darker)" }}>
-        <div>OIDC Provider Developer Console &copy; 2026</div>
+        <div>Origin Developer Console &copy; 2026</div>
       </footer>
     </div>
   );

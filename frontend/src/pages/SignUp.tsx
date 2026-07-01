@@ -96,9 +96,10 @@ export const SignUp: React.FC = () => {
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
       <div className="glass-panel" style={{ width: "100%", maxWidth: "420px", display: "flex", flexDirection: "column", gap: "24px" }}>
         
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+          <img src="/logo.png" alt="Origin Logo" style={{ height: "42px", width: "auto" }} />
           <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Create Developer Account</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: "var(--muted)" }}>Enter your registration details below</p>
+          <p style={{ fontSize: "0.85rem", marginTop: "2px", color: "var(--muted)" }}>Enter your registration details below</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>

@@ -8,8 +8,9 @@ export const Landing: React.FC = () => {
       
       {/* Hero Section */}
       <section style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "24px" }}>
-        <div>
-          <span className="tag">OIDC Engine v1.0</span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+          <img src="/logo.png" alt="Origin Logo" style={{ height: "64px", width: "auto" }} />
+          <span className="tag">Origin Engine v1.0</span>
         </div>
         <h1 style={{ maxWidth: "850px", lineHeight: 1.1, fontSize: "clamp(2.4rem, 6vw, 3.8rem)", fontWeight: 800 }}>
           Identity handshakes,<br />built for developers.

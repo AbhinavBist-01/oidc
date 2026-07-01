@@ -110,9 +110,10 @@ export const Login: React.FC = () => {
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, padding: "80px 24px" }}>
       <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "24px" }}>
         
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+          <img src="/logo.png" alt="Origin Logo" style={{ height: "42px", width: "auto" }} />
           <h2 style={{ border: "none", margin: 0, padding: 0, fontSize: "1.35rem", fontWeight: 700 }}>Account Sign In</h2>
-          <p style={{ fontSize: "0.85rem", marginTop: "6px", color: helperMsg ? "var(--fg-white)" : "var(--muted)", fontWeight: helperMsg ? 500 : 400 }}>
+          <p style={{ fontSize: "0.85rem", marginTop: "2px", color: helperMsg ? "var(--fg-white)" : "var(--muted)", fontWeight: helperMsg ? 500 : 400 }}>
             {helperMsg || "Enter your OIDC credentials to authenticate"}
           </p>
         </div>

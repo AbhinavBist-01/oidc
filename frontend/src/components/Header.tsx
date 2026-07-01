@@ -12,9 +12,9 @@ export const Header: React.FC = () => {
   return (
     <header className="app-header">
       <div className="header-container">
-        <Link to="/" className="logo">
-          <span>OIDC</span>
-          <span className="logo-dot"></span>
+        <Link to="/" className="logo" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <img src="/logo.png" alt="Origin Logo" style={{ height: "22px", width: "auto" }} />
+          <span>Origin</span>
         </Link>
 
         <nav className="app-nav">
