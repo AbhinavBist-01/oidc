@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import express from "express";
 import path from "node:path";
+import bcrypt from "bcryptjs";
 
 import { eq } from "drizzle-orm";
 import JWT from "jsonwebtoken";
@@ -131,17 +132,23 @@ app.post("/o/authenticate/sign-in", async (req, res) => {
     .where(eq(usersTable.email, email))
     .limit(1);
 
-  if (!user || !user.password || !user.salt) {
-    res.json({ message: "Invalid email or password." });
+  if (!user || !user.password) {
+    res.status(401).json({ message: "Invalid email or password." });
     return;
   }
 
-  const hash = crypto
-    .createHash("sha256")
-    .update(password + user.salt)
-    .digest("hex");
+  let isValid = false;
+  if (user.password.startsWith("$2a$") || user.password.startsWith("$2b$")) {
+    isValid = await bcrypt.compare(password, user.password);
+  } else if (user.salt) {
+    const hash = crypto
+      .createHash("sha256")
+      .update(password + user.salt)
+      .digest("hex");
+    isValid = hash === user.password;
+  }
 
-  if (hash !== user.password) {
+  if (!isValid) {
     res.status(401).json({ message: "Invalid email or password." });
     return;
   }
@@ -193,18 +200,14 @@ app.post("/o/authenticate/sign-up", async (req, res) => {
     return;
   }
 
-  const salt = crypto.randomBytes(16).toString("hex");
-  const hash = crypto
-    .createHash("sha256")
-    .update(password + salt)
-    .digest("hex");
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   await db.insert(usersTable).values({
     firstName,
     lastName: lastName ?? null,
     email,
-    password: hash,
-    salt,
+    password: hashedPassword,
+    salt: null,
   });
   res.status(201).json({ ok: true });
 });
@@ -623,12 +626,14 @@ app.post("/o/authorize/decision", requireSession, async (req, res) => {
 });
 
 app.post("/o/token", async (req, res) => {
-  const { grant_type, code, redirect_uri, refresh_token, code_verifier } = req.body;
+  const { grant_type, code, redirect_uri, refresh_token, code_verifier } =
+    req.body;
 
   if (grant_type !== "authorization_code" && grant_type !== "refresh_token") {
     res.status(400).json({
       error: "unsupported_grant_type",
-      error_description: "Only authorization_code and refresh_token grant types are supported.",
+      error_description:
+        "Only authorization_code and refresh_token grant types are supported.",
     });
     return;
   }
@@ -643,7 +648,10 @@ app.post("/o/token", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  const hashedSecret = crypto
+    .createHash("sha256")
+    .update(clientSecret)
+    .digest("hex");
   if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
@@ -735,7 +743,9 @@ app.post("/o/token", async (req, res) => {
       iat: now,
       scope: authCode.scope,
     };
-    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
+    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, {
+      algorithm: "RS256",
+    });
 
     const filteredClaims = filterClaimsByScope(user, authCode.scope);
     const idTokenClaims = {
@@ -746,7 +756,9 @@ app.post("/o/token", async (req, res) => {
       exp: now + 3600,
       iat: now,
     };
-    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
+    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, {
+      algorithm: "RS256",
+    });
 
     await deleteAuthorizationCode(code);
 
@@ -810,7 +822,9 @@ app.post("/o/token", async (req, res) => {
       iat: now,
       scope: session.scope,
     };
-    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
+    const access_token = JWT.sign(accessTokenClaims, PRIVATE_KEY, {
+      algorithm: "RS256",
+    });
 
     const filteredClaims = filterClaimsByScope(user, session.scope);
     const idTokenClaims = {
@@ -820,7 +834,9 @@ app.post("/o/token", async (req, res) => {
       exp: now + 3600,
       iat: now,
     };
-    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, { algorithm: "RS256" });
+    const id_token = JWT.sign(idTokenClaims, PRIVATE_KEY, {
+      algorithm: "RS256",
+    });
 
     res.json({
       access_token,
@@ -844,7 +860,10 @@ app.post("/o/revoke", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  const hashedSecret = crypto
+    .createHash("sha256")
+    .update(clientSecret)
+    .digest("hex");
   if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
@@ -881,7 +900,10 @@ app.post("/o/introspect", async (req, res) => {
   }
 
   const client = await getApprovedClient(clientId);
-  const hashedSecret = crypto.createHash("sha256").update(clientSecret).digest("hex");
+  const hashedSecret = crypto
+    .createHash("sha256")
+    .update(clientSecret)
+    .digest("hex");
   if (!client || client.clientSecret !== hashedSecret) {
     res.status(401).json({
       error: "invalid_client",
